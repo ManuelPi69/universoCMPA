@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#070d1b">
+<title>Órbita — Laboratório de Gravitação e Leis de Kepler</title>
+<style>
+:root{color-scheme:dark;--bg:#07101e;--panel:#101b2d;--panel2:#142238;--line:#263954;--text:#edf4ff;--muted:#9aacc5;--cyan:#69e0e8;--gold:#ffbd69;--violet:#a99cff;--green:#8be0b0;--danger:#ff7f87;--radius:18px;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text)}body{font-size:14px}button,input{font:inherit}button{cursor:pointer}#app{position:relative;width:100%;height:100%;overflow:hidden;background:radial-gradient(ellipse at 54% 40%,#14243b 0%,#091426 48%,#050a14 100%)}#view{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:none}
+.topbar{position:absolute;left:22px;right:22px;top:17px;height:58px;display:flex;align-items:center;justify-content:space-between;pointer-events:none;z-index:3}.brand{display:flex;gap:12px;align-items:center;pointer-events:auto}.brandMark{width:42px;height:42px;border:1px solid #3c6381;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#173451,#0d1c2d);box-shadow:0 8px 30px #0007;color:var(--cyan);font-size:22px}.brandText strong{display:block;font-size:15px;letter-spacing:.16em;font-weight:800}.brandText span{display:block;color:var(--muted);font-size:11px;margin-top:3px;letter-spacing:.08em}.topStatus{pointer-events:auto;border:1px solid #38516d;border-radius:99px;background:#081321cc;padding:9px 14px;color:#c7d7e9;font-size:11px;letter-spacing:.08em;backdrop-filter:blur(12px)}.topStatus b{color:var(--green);font-weight:700}
+#controlPanel{position:absolute;z-index:4;left:20px;top:92px;bottom:82px;width:370px;max-width:calc(100vw - 32px);border:1px solid #344963;border-radius:20px;background:linear-gradient(150deg,#0d1a2bea,#0a1423ed);box-shadow:0 22px 70px #0008;backdrop-filter:blur(18px);display:flex;flex-direction:column;overflow:hidden}.panelHead{padding:17px 18px 13px;border-bottom:1px solid #273c55}.eyebrow{font-size:10px;letter-spacing:.18em;color:var(--cyan);font-weight:800;text-transform:uppercase}.panelHead h1{font-size:19px;margin:6px 0 4px;line-height:1.2}.panelHead p{font-size:11px;color:var(--muted);margin:0;line-height:1.45}.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:9px 10px;background:#0a1422;border-bottom:1px solid #263a54}.tab{border:1px solid transparent;background:transparent;color:#91a5be;border-radius:10px;padding:8px 2px 7px;font-size:10px;font-weight:700;line-height:1.15;min-height:43px}.tab span{display:block;font-size:15px;margin-bottom:3px}.tab.active{color:#eafaff;background:#17344a;border-color:#2c6979;box-shadow:inset 0 0 0 1px #28596b}.panelBody{overflow:auto;overscroll-behavior:contain;padding:16px 17px 18px;flex:1}.panelBody::-webkit-scrollbar{width:5px}.panelBody::-webkit-scrollbar-thumb{background:#314b68;border-radius:9px}.sectionTitle{font-size:15px;font-weight:800;margin:0 0 7px}.subtle{color:var(--muted);font-size:11px;line-height:1.55}.lessonCard{border:1px solid #30455f;border-radius:14px;padding:14px;background:linear-gradient(130deg,#152944,#101e32);margin:10px 0 13px}.lessonMeta{display:flex;justify-content:space-between;align-items:center;color:#a9c1d7;font-size:10px;letter-spacing:.1em;text-transform:uppercase}.lessonCard h2{font-size:17px;margin:9px 0 8px;line-height:1.25}.lessonCard p{font-size:12px;line-height:1.55;color:#c4d3e5;margin:0}.equation{font-family:Georgia,serif;font-size:17px;color:#f8d9a7;text-align:center;padding:12px 8px;background:#0b1626;border-radius:11px;border:1px solid #263a51;margin:10px 0}.progress{height:5px;background:#1e3047;border-radius:8px;overflow:hidden;margin:10px 0 13px}.progress>i{display:block;height:100%;background:linear-gradient(90deg,#45b9c8,#b9e9d4);border-radius:8px}.btnRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn{border:1px solid #3b5876;background:#192b43;color:#e9f5ff;border-radius:11px;padding:10px 12px;font-size:11px;font-weight:800;letter-spacing:.02em;min-height:39px}.btn.primary{background:linear-gradient(135deg,#146174,#1b7990);border-color:#4eb4c0;color:white}.btn.gold{background:linear-gradient(135deg,#72502b,#91612e);border-color:#c08a4e;color:#fff5e6}.btn.ghost{background:transparent;color:#b5c6dc}.btn:active{transform:translateY(1px)}.field{margin:14px 0}.fieldHead{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:11px;color:#c3d4e7;margin-bottom:7px}.fieldHead output{color:var(--cyan);font-variant-numeric:tabular-nums;font-weight:800}.range{width:100%;accent-color:#68d6df;height:18px;cursor:pointer}.miniNote{font-size:10px;line-height:1.45;color:#8fa5bf;margin-top:4px}.statGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.stat{padding:10px;border:1px solid #2c405a;border-radius:11px;background:#0c1929}.stat label{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#8fa7c1;margin-bottom:5px}.stat strong{display:block;font-size:15px;color:#eff8ff;font-variant-numeric:tabular-nums}.stat small{display:block;color:#8da4bc;font-size:9px;margin-top:3px}.callout{border-left:3px solid var(--gold);background:#251f1a;padding:10px 11px;border-radius:0 10px 10px 0;font-size:11px;line-height:1.5;color:#f3dfc6;margin:11px 0}.callout.info{border-color:var(--cyan);background:#10232d;color:#c9eff1}.chartWrap{border:1px solid #2a4059;background:#0a1625;border-radius:12px;padding:9px;margin-top:11px}.chartWrap canvas{width:100%;height:105px;display:block}.chartLegend{font-size:9px;color:#9fb2c9;display:flex;gap:14px;margin-top:4px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px}.quizOption{display:block;width:100%;text-align:left;border:1px solid #344c68;background:#102038;color:#e9f2fd;border-radius:11px;padding:11px;margin:8px 0;font-size:11px;line-height:1.4}.quizOption.correct{border-color:#68ce9a;background:#102b25}.quizOption.wrong{border-color:#ec8790;background:#321a24}.quizFeedback{padding:12px;border-radius:11px;background:#112b2a;border:1px solid #2e7966;font-size:11px;line-height:1.55;color:#d8f5e7;margin-top:9px}.sourceLink{display:block;color:#9ee9ed;text-decoration:none;font-size:11px;line-height:1.45;padding:9px 0;border-bottom:1px solid #22364d}.sourceLink:hover{text-decoration:underline}.divider{border:0;border-top:1px solid #293d55;margin:14px 0}
+.bottomBar{position:absolute;left:20px;right:20px;bottom:15px;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:10px;pointer-events:none}.helpPill,.toolPill{pointer-events:auto;border:1px solid #334a65;background:#081321d9;color:#b4c5d9;border-radius:99px;padding:8px 12px;font-size:10px;backdrop-filter:blur(12px)}.toolbar{pointer-events:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.toolbar button{border:1px solid #344b65;background:#0c1a2bdc;color:#c2d4e8;border-radius:9px;padding:8px 10px;font-size:10px}.toolbar button.active{border-color:#5bb8c3;color:#cfffff;background:#123243}.toolbar button:focus-visible,.btn:focus-visible,.tab:focus-visible{outline:2px solid #9beef0;outline-offset:2px}#caption{position:absolute;z-index:5;bottom:72px;left:50%;transform:translateX(-50%);max-width:min(720px,80vw);padding:10px 17px;border:1px solid #638096;border-radius:10px;background:#07111de8;color:#f2f8ff;text-align:center;font-size:13px;line-height:1.4;display:none;pointer-events:none}#toast{position:absolute;z-index:8;top:82px;left:50%;transform:translateX(-50%);padding:11px 16px;background:#14243aee;border:1px solid #4a6c88;border-radius:12px;color:#eef8ff;font-size:12px;box-shadow:0 12px 35px #0008;opacity:0;transition:opacity .2s;pointer-events:none;max-width:80vw;text-align:center}#debug{display:none;position:absolute;right:16px;top:86px;z-index:6;background:#020812d9;border:1px solid #476078;border-radius:9px;padding:8px 10px;color:#8ef2d0;font:11px ui-monospace,monospace;white-space:pre;pointer-events:none}#xrNote{position:absolute;right:20px;top:88px;z-index:2;max-width:260px;border:1px solid #344b66;border-radius:11px;padding:9px 12px;background:#081422c7;color:#aebfd3;font-size:10px;line-height:1.4;backdrop-filter:blur(10px)}
+#vrMount{position:absolute;z-index:10;right:22px;bottom:22px}#vrMount button{border:1px solid #74d5dc!important;border-radius:12px!important;background:linear-gradient(140deg,#14536a,#116e7d)!important;color:#fff!important;font:800 12px Inter,system-ui,sans-serif!important;letter-spacing:.08em!important;padding:13px 17px!important;box-shadow:0 8px 25px #0007!important;min-height:46px}
+body.highContrast{--text:#fff;--muted:#d3e5f5}body.highContrast #controlPanel{border-color:#b9f4ff;background:#06101af5}body.highContrast .subtle,body.highContrast .miniNote{color:#d6e5f2}body.highContrast .btn,body.highContrast .tab{border-color:#9bdde8}
+@media(max-width:760px){.topbar{left:12px;right:12px;top:10px}.brandMark{width:36px;height:36px}.brandText strong{font-size:12px}.brandText span{font-size:9px}.topStatus{font-size:9px;padding:7px 9px}#controlPanel{left:10px;top:74px;bottom:78px;width:min(365px,calc(100vw - 20px));max-height:calc(100% - 154px)}.bottomBar{left:10px;right:10px;bottom:9px}.helpPill{display:none}.toolbar{width:100%;justify-content:center}.toolbar button{padding:8px}.panelHead{padding:13px 14px 10px}.panelBody{padding:13px}.tabs{padding:7px}.tab{font-size:9px}#xrNote{display:none}#vrMount{right:12px;bottom:58px}}
+.xr .topbar,.xr #controlPanel,.xr .bottomBar,.xr #caption,.xr #xrNote,.xr #toast,.xr #vrMount{display:none!important}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app">
+  <canvas id="view" aria-label="Maquete 3D interativa de um sistema planetário"></canvas>
+  <header class="topbar">
+    <div class="brand"><div class="brandMark">✧</div><div class="brandText"><strong>Ó R B I T A</strong><span>LABORATÓRIO DE GRAVITAÇÃO · WEBXR</span></div></div>
+    <div class="topStatus"><b>●</b> <span id="modeStatus">SIMULAÇÃO ATIVA</span> · <span id="timeStatus">0,00 anos</span></div>
+  </header>
+  <div id="xrNote">Maquete didática: as distâncias são visualmente ampliadas. <span style="color:#61e4ea">v</span> = velocidade · <span style="color:#ffc06e">Fᵍ</span> = atração gravitacional. As equações usam unidades físicas consistentes.</div>
+  <aside id="controlPanel" aria-label="Painel de aprendizagem">
+    <div class="panelHead"><div class="eyebrow">ESTAÇÃO DE APRENDIZAGEM · 40 MIN</div><h1>Explorando o Universo</h1><p>Esta experiência cobre somente a etapa <b>Em VR</b>. As fases Pré-VR e Pós-VR permanecem em sala de aula.</p></div>
+    <nav class="tabs" aria-label="Áreas do laboratório">
+      <button class="tab active" data-tab="trilha"><span>⌖</span>Trilha</button>
+      <button class="tab" data-tab="sandbox"><span>◉</span>Sandbox</button>
+      <button class="tab" data-tab="medidas"><span>⌁</span>Medidas</button>
+      <button class="tab" data-tab="quiz"><span>✓</span>Quiz</button>
+      <button class="tab" data-tab="fontes"><span>⌘</span>Fontes</button>
+    </nav>
+    <div class="panelBody" id="panelBody" tabindex="0"></div>
+  </aside>
+  <div id="caption" aria-live="polite"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="debug"></div>
+  <div class="bottomBar">
+    <div class="helpPill">PC: WASD + arrastar · Rodinha: zoom · Clique/arraste: planeta</div>
+    <div class="toolbar">
+      <button id="pauseBtn" title="Pausar ou continuar">Ⅱ Pausar</button><button id="resetBtn" title="Reiniciar o sistema orbital">↺ Reiniciar</button>
+      <button id="seatBtn" title="Alternar modo sentado ou em pé">◉ Em pé</button>
+      <button id="captionBtn" title="Ativar ou desativar legendas">Legendas: sim</button>
+      <button id="narrationBtn" title="Narração opcional em português">Narração: off</button>
+      <button id="muteBtn" title="Silenciar narração">Som: mudo</button>
+      <button id="contrastBtn" title="Alternar alto contraste">Contraste</button>
+    </div>
+  </div>
+  <div id="vrMount"></div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+// ÓRBITA — Gravitação Universal, Dinâmica Orbital e Leis de Kepler.
+// Modelo físico: N-corpos newtoniano, integrador velocity-Verlet, unidades AU/ano/M☉.
+
+const $ = (s) => document.querySelector(s);
+const view = $('#view');
+const panelBody = $('#panelBody');
+const G_AU = 4 * Math.PI * Math.PI;           // AU³ / (M☉ · ano²)
+const G_SI = 6.67430e-11;                      // m³ kg⁻¹ s⁻²
+const AU_M = 1.495978707e11;
+const YEAR_S = 365.25 * 86400;
+const M_SUN = 1.98847e30;
+const M_EARTH = 5.9722e24;
+const SCALE = 1.15;                            // escala visual: 1 AU = 1,15 unidades Three.js
+const DT = 0.0005;                             // passo físico fixo em anos
+const MAX_PLANETS = 6;
+const SOFTENING = 0.00008;                     // regularização numérica muito pequena (AU)
+const TAU = Math.PI * 2;
+const IS_PICO_NEO3 = /PICO[^)]*(?:Neo\s?3|Neo3)|Neo\s?3/i.test(navigator.userAgent);
+
+const lessonSteps = [
+  {title:'A missão: arquiteto de sistemas',time:'4 min',body:'Você está diante de uma maquete planetária. A estrela exerce atração gravitacional; o planeta já possui velocidade tangencial. Seu desafio é encontrar condições iniciais que mantenham o corpo em órbita, em vez de fazê-lo cair na estrela ou escapar.',key:'Pergunta-guia: o que precisa mudar para transformar uma queda em uma órbita?',eq:'Uma órbita é queda livre contínua com velocidade tangencial.'},
+  {title:'Gravitação: a interação que curva o caminho',time:'7 min',body:'A força gravitacional atua ao longo da linha que une os centros dos corpos. Ela cresce com as massas e diminui com o quadrado da distância. Observe o vetor de atração e compare a aceleração quando você altera a massa da estrela ou afasta o planeta.',key:'Experimente: dobre a massa estelar e, depois, dobre a distância. Compare a força em cada caso.',eq:'F = G · M · m / r²'},
+  {title:'Lançamento: circular, elíptico ou escape?',time:'9 min',body:'A velocidade tangencial decide a energia e a forma da trajetória. Na mesma distância, a velocidade circular é √(GM/r); a velocidade de escape é √(2GM/r). Abaixo da circular, o corpo pode cair; entre a circular e a de escape, pode ficar em órbita elíptica; acima da escape, a trajetória é aberta.',key:'Use os presets e depois ajuste a velocidade inicial manualmente. Observe a trajetória e os vetores.',eq:'v circular = √(G(M+m)/r)   ·   v escape = √2 · v circular'},
+  {title:'Kepler em movimento',time:'10 min',body:'A 1ª Lei descreve órbitas elípticas com a estrela em um foco. A 2ª Lei diz que o raio vetor varre áreas iguais em tempos iguais: o planeta acelera no periélio e desacelera no afélio. A 3ª Lei relaciona período e semieixo maior; para dois corpos, T² = 4π²a³/[G(M+m)].',key:'Ative os setores de áreas iguais, compare velocidades e leia o período previsto pelos elementos orbitais.',eq:'T² / a³ = 4π² / [G(M+m)]'},
+  {title:'Projeto livre: teste seu próprio sistema',time:'8 min',body:'Agora você define a massa estelar, a massa do planeta, a distância inicial e a velocidade tangencial. Crie um novo corpo ou reconfigure o selecionado. Registre a previsão antes do lançamento e confronte-a com os valores calculados pelo simulador.',key:'Desafio: duplique a massa da estrela. O que ocorre com a força, a velocidade circular e o período se a distância permanecer igual?',eq:'F ∝ M   ·   v circular ∝ √M   ·   T ∝ 1/√M  (r fixo)'}
+];
+
+const quizQuestions = [
+  {q:'Na 1ª Lei de Kepler, qual é a posição da estrela em uma órbita elíptica?',a:['No centro geométrico da elipse.','Em um dos focos da elipse.','Sempre no periélio.','Fora do plano orbital.'],correct:1,why:'A elipse possui dois focos. Na aproximação de dois corpos, a estrela fica em um dos focos; o centro geométrico geralmente não coincide com a posição da estrela.'},
+  {q:'Mantendo as massas e a distância constantes, se a massa da estrela dobra, a força gravitacional sobre o planeta:',a:['Cai à metade.','Permanece igual.','Dobra.','Fica quatro vezes maior.'],correct:2,why:'Pela lei de Newton, F = G M m/r². Com m e r constantes, a força é diretamente proporcional à massa M da estrela.'},
+  {q:'Se a distância entre os centros dobra, mantendo as massas, a força gravitacional passa a ser:',a:['Duas vezes maior.','Metade.','Um quarto.','Quatro vezes maior.'],correct:2,why:'A distância está ao quadrado no denominador: F₂/F₁ = 1/2² = 1/4. A força diminui para 25% do valor inicial.'},
+  {q:'Em uma órbita elíptica, onde o planeta apresenta maior velocidade orbital?',a:['No afélio.','No periélio.','Em todos os pontos, pois a velocidade é constante.','No centro da elipse.'],correct:1,why:'A 2ª Lei de Kepler conserva a velocidade areolar. Perto do periélio, o raio vetor é menor e a velocidade precisa ser maior para varrer a mesma área no mesmo intervalo de tempo.'},
+  {q:'Para a mesma massa central, se o semieixo maior de uma órbita dobra, o período orbital muda por um fator:',a:['2.','4.','√2.','2√2.'],correct:3,why:'Pela 3ª Lei, T² ∝ a³. Logo, T₂/T₁ = (2³)^(1/2) = √8 = 2√2.'}
+];
+
+const state = {
+  activeTab:'trilha', lesson:0, settings:{starMass:1,planetMass:1,distance:1,speedFactor:1,simRate:0.18},
+  running:true, simTime:0, accumulator:0, selectedId:1, bodySerial:0,
+  bodies:[], measureMode:'none', measurePoints:[], rulerDistance:null,
+  showAreas:true, quiz:{started:false,index:0,answers:[],feedback:false,finished:false},
+  seated:false, captions:true, narration:false, muted:true, highContrast:false,
+  collision:false, lastUI:0, lastTrail:0, lastStatus:0, lastChart:0, xr:false, vignetteTime:0,
+  toastUntil:0, toastText:'',
+  cameraOrbit:{theta:0,phi:0.57,radius:12.5,target:new THREE.Vector3(0,0,0)},
+  pointer:{down:false,x:0,y:0,mode:'',body:null},
+  xrCooldown:{left:0,right:0}, xrStick:{left:false,right:false}, xrGrab:null,
+  fps:{last:0,frames:0,value:0},
+  selectedAreaInterval:0.06
+};
+
+// ---------- Cena e renderização ----------
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x050a14);
+scene.fog = new THREE.FogExp2(0x07101e, 0.009);
+const cameraRig = new THREE.Group();
+scene.add(cameraRig);
+const camera = new THREE.PerspectiveCamera(58, window.innerWidth/window.innerHeight, 0.05, 180);
+cameraRig.add(camera);
+const renderer = new THREE.WebGLRenderer({canvas:view,antialias:true,alpha:false,powerPreference:'high-performance',stencil:false,depth:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.45));
+renderer.setSize(window.innerWidth,window.innerHeight,false);
+renderer.xr.enabled = true;
+renderer.xr.setReferenceSpaceType('local-floor');
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.12;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+try { renderer.xr.setFoveation(0.85); } catch (e) { /* compositor pode não oferecer ajuste de foveação */ }
+try { renderer.xr.setFramebufferScaleFactor(0.88); } catch (e) { /* depende do runtime XR */ }
+
+const hemi = new THREE.HemisphereLight(0x9bb9de,0x141b2d,1.25); scene.add(hemi);
+const keyLight = new THREE.DirectionalLight(0xe4efff,2.3);
+keyLight.position.set(-5,9,6); keyLight.castShadow=true;
+keyLight.shadow.mapSize.set(1024,1024);
+keyLight.shadow.camera.near=0.5;keyLight.shadow.camera.far=28;
+keyLight.shadow.camera.left=-7;keyLight.shadow.camera.right=7;keyLight.shadow.camera.top=7;keyLight.shadow.camera.bottom=-7;
+keyLight.shadow.bias=-0.00025; scene.add(keyLight);
+const fillLight = new THREE.PointLight(0x527fbc,18,18,2); fillLight.position.set(2,3,-3); scene.add(fillLight);
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+const roomEnvironment = new RoomEnvironment(renderer);
+const envRT = pmremGenerator.fromScene(roomEnvironment,0.04);
+scene.environment = envRT.texture;
+roomEnvironment.dispose(); pmremGenerator.dispose();
+
+const systemRoot = new THREE.Group(); scene.add(systemRoot);
+const raycaster = new THREE.Raycaster();
+const pointerNDC = new THREE.Vector2();
+const planeOrbital = new THREE.Plane(new THREE.Vector3(0,1,0),0);
+const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), tmpC = new THREE.Vector3();
+const tmpMatrix = new THREE.Matrix4();
+const tmpQuat = new THREE.Quaternion();
+
+function seededRandom(seed){let x=seed>>>0;return()=>{x=(x*1664525+1013904223)>>>0;return x/4294967296;};}
+function makeSurfaceTexture(base,seed=1,kind='rock'){
+  const c=document.createElement('canvas');c.width=512;c.height=256;const ctx=c.getContext('2d');
+  ctx.fillStyle=base;ctx.fillRect(0,0,c.width,c.height);const rnd=seededRandom(seed);
+  if(kind==='gas'){
+    for(let i=0;i<44;i++){const y=rnd()*256;const h=2+rnd()*13;ctx.globalAlpha=.06+rnd()*.17;ctx.fillStyle=i%2?'#fff0cb':'#382b32';ctx.beginPath();ctx.ellipse(256,y,260,h,0,0,TAU);ctx.fill();}
+    for(let i=0;i<8;i++){const y=rnd()*256;ctx.globalAlpha=.17;ctx.strokeStyle='#fff1d1';ctx.lineWidth=1+rnd()*3;ctx.beginPath();ctx.moveTo(0,y);ctx.bezierCurveTo(120,y-16,340,y+14,512,y-4);ctx.stroke();}
+  }else{
+    for(let i=0;i<950;i++){const x=rnd()*512,y=rnd()*256,r=1+rnd()*13;ctx.globalAlpha=.025+rnd()*.13;ctx.fillStyle=rnd()>.5?'#f9f4e9':'#0a1525';ctx.beginPath();ctx.ellipse(x,y,r,r*(.35+rnd()),rnd()*Math.PI,0,TAU);ctx.fill();}
+    for(let i=0;i<18;i++){const x=rnd()*512,y=rnd()*256,r=4+rnd()*18;ctx.globalAlpha=.12;ctx.strokeStyle='#e9edf4';ctx.lineWidth=1+rnd()*2;ctx.beginPath();ctx.ellipse(x,y,r,r*.62,rnd(),0,TAU);ctx.stroke();}
+  }
+  // Vinheta longitudinal sutil para volume quando aplicada à esfera.
+  const grad=ctx.createLinearGradient(0,0,0,256);grad.addColorStop(0,'#ffffff');grad.addColorStop(.5,'#ffffff');grad.addColorStop(1,'#9aa8bc');ctx.globalAlpha=.18;ctx.fillStyle=grad;ctx.fillRect(0,0,512,256);ctx.globalAlpha=1;
+  const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;tex.wrapS=THREE.RepeatWrapping;tex.anisotropy=2;return tex;
+}
+function makeLabel(text,color='#e9f5ff',width=512){
+  const c=document.createElement('canvas');c.width=width;c.height=128;const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='rgba(5,13,25,.72)';
+  const r=18;ctx.beginPath();ctx.roundRect(8,12,c.width-16,c.height-24,r);ctx.fill();
+  ctx.strokeStyle='rgba(113,171,200,.55)';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle=color;ctx.font='700 38px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,c.width/2,c.height/2);
+  const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});const s=new THREE.Sprite(mat);s.scale.set(.92,.23,1);return s;
+}
+function createStarfield(){
+  const rnd=seededRandom(501);const count=1500;const pos=new Float32Array(count*3);const col=new Float32Array(count*3);
+  for(let i=0;i<count;i++){const rad=20+rnd()*48,theta=rnd()*TAU,phi=Math.acos(2*rnd()-1);pos[i*3]=rad*Math.sin(phi)*Math.cos(theta);pos[i*3+1]=rad*Math.cos(phi);pos[i*3+2]=rad*Math.sin(phi)*Math.sin(theta);const v=.55+rnd()*.45;const warm=rnd();col[i*3]=v;col[i*3+1]=v*(.86+warm*.12);col[i*3+2]=v*(.78+warm*.22);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));
+  const p=new THREE.Points(g,new THREE.PointsMaterial({size:.075,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true}));scene.add(p);
+  const bg=new THREE.Mesh(new THREE.SphereGeometry(85,32,20),new THREE.MeshBasicMaterial({map:(()=>{const c=document.createElement('canvas');c.width=16;c.height=256;const x=c.getContext('2d');const gr=x.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#020611');gr.addColorStop(.42,'#0b1830');gr.addColorStop(1,'#050a17');x.fillStyle=gr;x.fillRect(0,0,16,256);const t=new THREE.CanvasTexture(c);return t;})(),side:THREE.BackSide,depthWrite:false}));scene.add(bg);
+}
+createStarfield();
+
+function createPlinth(){
+  const mat=new THREE.MeshStandardMaterial({color:0x14243a,metalness:.62,roughness:.48,envMapIntensity:.75});
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(4.15,4.3,.22,96,1,false),mat);base.position.y=-.19;base.receiveShadow=true;systemRoot.add(base);
+  const rim1=new THREE.Mesh(new THREE.TorusGeometry(4.12,.045,8,128),new THREE.MeshStandardMaterial({color:0x4c7b93,metalness:.72,roughness:.3,emissive:0x102f3d,emissiveIntensity:.4}));rim1.rotation.x=Math.PI/2;rim1.position.y=-.06;systemRoot.add(rim1);
+  const rim2=new THREE.Mesh(new THREE.TorusGeometry(3.72,.012,6,128),new THREE.MeshStandardMaterial({color:0x668ba1,metalness:.45,roughness:.4}));rim2.rotation.x=Math.PI/2;rim2.position.y=-.065;systemRoot.add(rim2);
+  const pedestalProfile=[new THREE.Vector2(0,-.10),new THREE.Vector2(.22,-.10),new THREE.Vector2(.29,-.075),new THREE.Vector2(.27,-.035),new THREE.Vector2(.19,-.012),new THREE.Vector2(0,-.012)];
+  const pedestal=new THREE.Mesh(new THREE.LatheGeometry(pedestalProfile,48),new THREE.MeshStandardMaterial({color:0x385a72,metalness:.78,roughness:.31}));pedestal.position.y=0;systemRoot.add(pedestal);
+  const arrowShape=new THREE.Shape();arrowShape.moveTo(-.42,0);arrowShape.quadraticCurveTo(-.08,.25,.22,.08);arrowShape.lineTo(.16,.22);arrowShape.lineTo(.51,-.02);arrowShape.lineTo(.12,-.12);arrowShape.lineTo(.17,.015);arrowShape.quadraticCurveTo(-.08,.16,-.34,-.04);arrowShape.closePath();
+  const orbitArrow=new THREE.Mesh(new THREE.ExtrudeGeometry(arrowShape,{depth:.014,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.008,bevelThickness:.008}),new THREE.MeshStandardMaterial({color:0xc39256,metalness:.55,roughness:.43,emissive:0x352313,emissiveIntensity:.2}));orbitArrow.rotation.x=-Math.PI/2;orbitArrow.position.set(0,-.055,-3.7);systemRoot.add(orbitArrow);
+  const dustGeo=new THREE.IcosahedronGeometry(.022,1),dustMat=new THREE.MeshStandardMaterial({color:0x82b6cf,metalness:.58,roughness:.38,emissive:0x142b3a,emissiveIntensity:.32});const dust=new THREE.InstancedMesh(dustGeo,dustMat,56);const dummy=new THREE.Object3D();const rnd=seededRandom(941);
+  for(let i=0;i<56;i++){const a=i/56*TAU,r=3.82+rnd()*.22;dummy.position.set(Math.cos(a)*r,-.05,Math.sin(a)*r);const sc=.55+rnd()*.7;dummy.scale.setScalar(sc);dummy.rotation.set(rnd()*TAU,rnd()*TAU,rnd()*TAU);dummy.updateMatrix();dust.setMatrixAt(i,dummy.matrix);}dust.instanceMatrix.needsUpdate=true;systemRoot.add(dust);
+  for(const r of [1,2,3]){const ring=new THREE.Mesh(new THREE.TorusGeometry(r*SCALE,.006,5,128),new THREE.MeshBasicMaterial({color:0x44627d,transparent:true,opacity:.45}));ring.rotation.x=Math.PI/2;ring.position.y=-.065;systemRoot.add(ring);}
+  const ticks=new THREE.Group();const pts=[];for(let i=0;i<96;i++){const a=i/96*TAU,inner=3.82,outer=i%4===0?4.02:3.91;pts.push(new THREE.Vector3(Math.cos(a)*inner,-.064,Math.sin(a)*inner),new THREE.Vector3(Math.cos(a)*outer,-.064,Math.sin(a)*outer));}
+  const tg=new THREE.BufferGeometry().setFromPoints(pts);ticks.add(new THREE.LineSegments(tg,new THREE.LineBasicMaterial({color:0x789ab1,transparent:true,opacity:.55})));systemRoot.add(ticks);
+  const label=makeLabel('MAQUETE · 1 AU ≈ 1,15 m','#b4d5e8');label.position.set(-2.75,.02,2.9);label.scale.set(1.25,.31,1);systemRoot.add(label);
+}
+createPlinth();
+
+function newTrail(){
+  const max=6000;const arr=new Float32Array(max*3);const geo=new THREE.BufferGeometry();const attr=new THREE.BufferAttribute(arr,3);attr.setUsage(THREE.DynamicDrawUsage);geo.setAttribute('position',attr);geo.setDrawRange(0,0);
+  const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0x69dce6,transparent:true,opacity:.78}));line.frustumCulled=false;systemRoot.add(line);return {geo,attr,line,count:0,max,last:null};
+}
+function createBodyVisual(body,index){
+  const group=new THREE.Group();group.userData.body=body;systemRoot.add(group);body.visual=group;
+  if(body.isStar){
+    const tex=makeSurfaceTexture('#e58a34',index+33,'gas');const mat=new THREE.MeshStandardMaterial({map:tex,color:0xffffff,emissive:0xff8b36,emissiveMap:tex,emissiveIntensity:1.55,roughness:.62,metalness:.02});
+    const sphere=new THREE.Mesh(new THREE.SphereGeometry(.235,48,32),mat);sphere.castShadow=true;group.add(sphere);body.sphere=sphere;
+    for(let i=0;i<3;i++){const corona=new THREE.Mesh(new THREE.TorusGeometry(.27+i*.075,.008,5,96),new THREE.MeshBasicMaterial({color:i===1?0xffa84d:0xffd18c,transparent:true,opacity:.38-i*.07}));corona.rotation.x=Math.PI/2+(i*.12);corona.rotation.y=i*.7;group.add(corona);}
+    const loopCurves=[new THREE.CatmullRomCurve3([new THREE.Vector3(-.18,.08,.12),new THREE.Vector3(-.25,.36,.09),new THREE.Vector3(0,.43,.02),new THREE.Vector3(.22,.10,.13)]),new THREE.CatmullRomCurve3([new THREE.Vector3(-.12,.03,-.16),new THREE.Vector3(-.28,.27,-.18),new THREE.Vector3(.03,.35,-.22),new THREE.Vector3(.18,.05,-.16)])];
+    loopCurves.forEach((curve,i)=>group.add(new THREE.Mesh(new THREE.TubeGeometry(curve,36,.006,6,false),new THREE.MeshStandardMaterial({color:i?0xffc37d:0xffe1a7,emissive:0xb75b24,emissiveIntensity:.55,roughness:.42,metalness:.08}))));
+    const glow=new THREE.Mesh(new THREE.SphereGeometry(.38,24,16),new THREE.MeshBasicMaterial({color:0xff9a42,transparent:true,opacity:.075,side:THREE.BackSide,depthWrite:false}));group.add(glow);
+    body.label=makeLabel('ESTRELA · M','#ffe1a9');body.label.position.set(0,.52,0);group.add(body.label);
+  }else{
+    const palettes=['#397f9c','#ba7951','#8a8bb5','#b4a06c','#6a9d8c','#936caa'];
+    const base=body.color||palettes[(index-1)%palettes.length];const tex=makeSurfaceTexture(base,index*97+23,index%3===0?'gas':'rock');
+    const rad=.053+Math.min(.035,Math.log10(1+body.mass*M_SUN/M_EARTH)*.006);
+    const mat=new THREE.MeshStandardMaterial({map:tex,roughness:.72,metalness:.035});const sphere=new THREE.Mesh(new THREE.SphereGeometry(rad,32,24),mat);sphere.castShadow=true;sphere.receiveShadow=true;sphere.userData.body=body;group.add(sphere);body.sphere=sphere;body.radius=rad;
+    const atmos=new THREE.Mesh(new THREE.SphereGeometry(rad*1.16,24,18),new THREE.MeshPhysicalMaterial({color:base,transparent:true,opacity:.12,roughness:.15,metalness:0,side:THREE.BackSide,depthWrite:false}));group.add(atmos);
+    if(index%3===0){const rings=new THREE.Mesh(new THREE.RingGeometry(rad*1.5,rad*2.55,64),new THREE.MeshStandardMaterial({color:0xc9b58e,roughness:.85,metalness:.2,side:THREE.DoubleSide,transparent:true,opacity:.63}));rings.rotation.x=-Math.PI/2+.16;rings.rotation.y=.2;group.add(rings);}
+    body.label=makeLabel(body.name,'#d8f6fb');body.label.position.set(0,rad*2.7,0);body.label.scale.set(.55,.14,1);group.add(body.label);
+  }
+  body.trail=newTrail();
+  if(!body.isStar){
+    body.vArrow=new THREE.ArrowHelper(new THREE.Vector3(0,0,1),new THREE.Vector3(),.5,0x55e5ec,.14,.08);systemRoot.add(body.vArrow);
+    body.gArrow=new THREE.ArrowHelper(new THREE.Vector3(-1,0,0),new THREE.Vector3(),.5,0xffb65e,.14,.08);systemRoot.add(body.gArrow);
+    body.halo=new THREE.Mesh(new THREE.TorusGeometry(body.radius*1.75,.009,5,48),new THREE.MeshBasicMaterial({color:0x78eff1,transparent:true,opacity:.8}));body.halo.rotation.x=Math.PI/2;systemRoot.add(body.halo);
+  }
+}
+
+function makeBody({name,mass,pos,vel,isStar=false,color}){
+  const body={id:++state.bodySerial,name,mass,pos:pos.clone(),vel:vel.clone(),acc:new THREE.Vector3(),isStar,color,history:[],trail:null,visual:null,sphere:null};
+  state.bodies.push(body);createBodyVisual(body,state.bodies.length-1);return body;
+}
+function starBody(){return state.bodies.find(b=>b.isStar);}
+function selectedBody(){return state.bodies.find(b=>b.id===state.selectedId && !b.isStar)||state.bodies.find(b=>!b.isStar)||null;}
+function clearTrail(body){if(!body?.trail)return;body.trail.count=0;body.trail.last=null;body.trail.geo.setDrawRange(0,0);body.trail.attr.needsUpdate=true;body.history=[];}
+function updateBodyMassVisual(body){
+  if(body.isStar){const s=.78+Math.pow(body.mass,0.25)*.22;body.sphere.scale.setScalar(s);}
+  else if(body.sphere){const r=.053+Math.min(.035,Math.log10(1+body.mass*M_SUN/M_EARTH)*.006);const f=r/(body.radius||r);body.visual.scale.setScalar(f);body.radius=r;}
+}
+function initializeSystem(){
+  const star=makeBody({name:'Estrela',mass:1,pos:new THREE.Vector3(0,0,0),vel:new THREE.Vector3(),isStar:true});
+  spawnPlanet({silent:true});calculateAccelerations();recordHistory(true);updateVisuals();
+}
+function spawnPlanet({silent=false}={}){
+  if(state.bodies.filter(b=>!b.isStar).length>=MAX_PLANETS){showToast('Limite didático: até seis planetas por sistema.');return null;}
+  const star=starBody();if(!star)return null;
+  const m=state.settings.planetMass*M_EARTH/M_SUN;const r=state.settings.distance;
+  const vc=Math.sqrt(G_AU*(star.mass+m)/r);const color=['#48a7bd','#cf9360','#9b95c8','#b3a66e','#66a58c','#b27aab'][state.bodies.length-1];
+  const n=state.bodies.filter(b=>!b.isStar).length+1;
+  const b=makeBody({name:`Planeta ${n}`,mass:m,pos:star.pos.clone().add(new THREE.Vector3(r,0,0)),vel:star.vel.clone().add(new THREE.Vector3(0,0,vc*state.settings.speedFactor)),color});
+  state.selectedId=b.id;clearTrail(b);if(!silent)showToast(`${b.name} lançado com velocidade inicial definida.`);
+  calculateAccelerations();recordHistory(true);renderDOMPanel();drawVRPanel();return b;
+}
+function applyInitialConditions(){
+  const b=selectedBody(),star=starBody();if(!b||!star){showToast('Crie um planeta antes de reconfigurar a órbita.');return;}
+  const r=state.settings.distance,m=state.settings.planetMass*M_EARTH/M_SUN,vc=Math.sqrt(G_AU*(star.mass+m)/r);
+  b.mass=m;b.pos.copy(star.pos).add(new THREE.Vector3(r,0,0));b.vel.copy(star.vel).add(new THREE.Vector3(0,0,vc*state.settings.speedFactor));
+  updateBodyMassVisual(b);clearTrail(b);calculateAccelerations();recordHistory(true);showToast('Condições iniciais aplicadas ao planeta selecionado.');updateAllPanels();
+}
+function resetSystem(){
+  clearRuler();state.measureMode='none';state.showAreas=true;if(state.angleLine){systemRoot.remove(state.angleLine);state.angleLine.geometry.dispose();state.angleLine=null;}
+  for(const b of state.bodies){systemRoot.remove(b.visual);if(b.trail)systemRoot.remove(b.trail.line);if(b.vArrow)systemRoot.remove(b.vArrow);if(b.gArrow)systemRoot.remove(b.gArrow);if(b.halo)systemRoot.remove(b.halo);b.trail?.geo.dispose();}
+  // Remove filhos dinâmicos e reconstrói a maquete com os mesmos materiais procedurais.
+  for(let i=systemRoot.children.length-1;i>=0;i--){const o=systemRoot.children[i];if(o.userData.dynamicBody||o.userData.measurement)systemRoot.remove(o);}
+  state.bodies=[];state.simTime=0;state.accumulator=0;state.bodySerial=0;state.collision=false;state.running=true;state.xrGrab=null;state.xrStick={left:false,right:false};state.selectedId=0;state.areaOne=0;state.areaTwo=0;
+  state.settings={starMass:1,planetMass:1,distance:1,speedFactor:1,simRate:.18};
+  initializeSystem();renderDOMPanel();drawVRPanel();syncToolbar();showToast('Sistema reiniciado com órbita circular de referência.');
+}
+
+function calculateAccelerations(){
+  const b=state.bodies;for(const x of b)x.acc.set(0,0,0);
+  for(let i=0;i<b.length;i++)for(let j=i+1;j<b.length;j++){
+    const d=new THREE.Vector3().subVectors(b[j].pos,b[i].pos);const r2=d.lengthSq()+SOFTENING*SOFTENING;const invR3=1/(r2*Math.sqrt(r2));
+    b[i].acc.addScaledVector(d,G_AU*b[j].mass*invR3);
+    b[j].acc.addScaledVector(d,-G_AU*b[i].mass*invR3);
+  }
+}
+function recordHistory(force=false){
+  const star=starBody();if(!star)return;
+  for(const b of state.bodies){if(b.isStar)continue;const rel=b.pos.clone().sub(star.pos),rv=b.vel.clone().sub(star.vel);const h=b.history;
+    if(force||!h.length||state.simTime-h[h.length-1].t>0.00035){h.push({t:state.simTime,x:rel.x,z:rel.z,sx:star.pos.x,sz:star.pos.z,vx:rv.x,vz:rv.z});if(h.length>16000)h.splice(0,4000);}
+  }
+}
+function adaptivePhysicsStep(){
+  const b=state.bodies;let h=DT;
+  for(let i=0;i<b.length;i++)for(let j=i+1;j<b.length;j++){
+    const r=b[i].pos.distanceTo(b[j].pos);const v=b[i].vel.distanceTo(b[j].vel);
+    if(v>1e-9){const local=.03*r/v;h=Math.min(h,local);}
+  }
+  return Math.max(0.00002,h);
+}
+function physicsStep(dt){
+  const b=state.bodies;const old=b.map(x=>x.acc.clone());
+  for(let i=0;i<b.length;i++)b[i].pos.addScaledVector(b[i].vel,dt).addScaledVector(old[i],.5*dt*dt);
+  calculateAccelerations();
+  for(let i=0;i<b.length;i++)b[i].vel.addScaledVector(old[i].add(b[i].acc),.5*dt);
+  state.simTime+=dt;recordHistory();
+  const s=starBody();for(const p of b){if(p.isStar)continue;if(p.pos.distanceTo(s.pos)<.006){state.collision=true;state.running=false;showToast(`${p.name} atingiu a região estelar de colisão. Reinicie ou altere as condições iniciais.`);break;}}
+}
+function computeOrbitalElements(body=selectedBody()){
+  const s=starBody();if(!s||!body)return null;
+  const rvec=body.pos.clone().sub(s.pos),vvec=body.vel.clone().sub(s.vel);const r=rvec.length(),v=vvec.length();
+  const mu=G_AU*(s.mass+body.mass);const energy=.5*v*v-mu/r;const hvec=new THREE.Vector3().crossVectors(rvec,vvec);const h=hvec.length();
+  const e=Math.sqrt(Math.max(0,1+(2*energy*h*h)/(mu*mu)));
+  const bound=energy<0;const a=bound?-mu/(2*energy):Infinity;const period=bound?TAU*Math.sqrt(a*a*a/mu):null;
+  return {r,v,mu,energy,h,e,a,period,peri:bound?a*(1-e):null,apo:bound?a*(1+e):null,rvec,vvec,vcirc:Math.sqrt(mu/r),vesc:Math.sqrt(2*mu/r),arealRate:h/2};
+}
+function computeMeasures(body=selectedBody()){
+  const el=computeOrbitalElements(body);if(!el)return null;const s=starBody();const mStar=s.mass*M_SUN,mPlanet=body.mass*M_SUN;
+  const force=G_SI*mStar*mPlanet/Math.pow(el.r*AU_M,2);const acc=force/mPlanet;
+  const reducedMass=mStar*mPlanet/(mStar+mPlanet);const fCircular=reducedMass*Math.pow(el.vcirc*AU_M/YEAR_S,2)/(el.r*AU_M);
+  const ratio=el.period?el.period*el.period/Math.pow(el.a,3):null;
+  const expected=4*Math.PI*Math.PI/(G_AU*(s.mass+body.mass));
+  return {...el,force,acc,fCircular,ratio,expected,velocityMS:el.v*AU_M/YEAR_S,vcircMS:el.vcirc*AU_M/YEAR_S,vescMS:el.vesc*AU_M/YEAR_S};
+}
+function historySample(history,t){
+  if(!history.length)return null;if(t<=history[0].t)return history[0];if(t>=history[history.length-1].t)return history[history.length-1];
+  let lo=0,hi=history.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(history[m].t<t)lo=m;else hi=m;}
+  const a=history[lo],b=history[hi],f=(t-a.t)/(b.t-a.t||1);return {t,x:a.x+(b.x-a.x)*f,z:a.z+(b.z-a.z)*f,vx:a.vx+(b.vx-a.vx)*f,vz:a.vz+(b.vz-a.vz)*f};
+}
+function sectorData(body,t1,t2){
+  const hist=body.history;if(hist.length<3||t2<=hist[0].t)return null;
+  const start=historySample(hist,t1),end=historySample(hist,t2);if(!start||!end)return null;
+  const pts=[start];for(const h of hist){if(h.t>t1&&h.t<t2)pts.push(h);}pts.push(end);
+  let area=0;for(let i=0;i<pts.length-1;i++)area+=Math.abs(pts[i].x*pts[i+1].z-pts[i+1].x*pts[i].z)*.5;
+  return {points:pts,area};
+}
+
+// ---------- Geometria didática: setores, vetores e instrumentos ----------
+const sectorMaterials=[new THREE.MeshBasicMaterial({color:0x55cbd3,transparent:true,opacity:.26,side:THREE.DoubleSide,depthWrite:false}),new THREE.MeshBasicMaterial({color:0xffbf70,transparent:true,opacity:.26,side:THREE.DoubleSide,depthWrite:false})];
+const sectorMeshes=[new THREE.Mesh(new THREE.BufferGeometry(),sectorMaterials[0]),new THREE.Mesh(new THREE.BufferGeometry(),sectorMaterials[1])];sectorMeshes.forEach(m=>{m.position.y=.025;m.renderOrder=3;systemRoot.add(m);});
+let sectorUpdateClock=0;
+function buildSectorGeometry(data){
+  const pts=data?.points||[];if(pts.length<2)return new THREE.BufferGeometry();const arr=[];const star=starBody();const sx=(star?.pos.x||0)*SCALE,sz=(star?.pos.z||0)*SCALE;
+  for(let i=0;i<pts.length-1;i++){arr.push(sx,.026,sz,((star?.pos.x||0)+pts[i].x)*SCALE,.026,((star?.pos.z||0)+pts[i].z)*SCALE,((star?.pos.x||0)+pts[i+1].x)*SCALE,.026,((star?.pos.z||0)+pts[i+1].z)*SCALE);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(arr,3));g.computeVertexNormals();return g;
+}
+function updateAngleArc(){
+  const b=selectedBody();
+  if(state.measureMode!=='angle'||!b){if(state.angleLine)state.angleLine.visible=false;return;}
+  const m=computeMeasures(b);if(!m||m.vvec.lengthSq()<1e-12||m.rvec.lengthSq()<1e-12)return;
+  const radial=m.rvec.clone().normalize(),vel=m.vvec.clone().normalize();
+  const a1=Math.atan2(radial.z,radial.x),a2=Math.atan2(vel.z,vel.x);let delta=((a2-a1+Math.PI*3)%TAU)-Math.PI;const pts=[];
+  for(let i=0;i<=28;i++){const a=a1+delta*i/28;pts.push(new THREE.Vector3(b.pos.x*SCALE+Math.cos(a)*.26,.09,b.pos.z*SCALE+Math.sin(a)*.26));}
+  if(!state.angleLine){state.angleLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0xb5a7ff,linewidth:2}));systemRoot.add(state.angleLine);}else{const old=state.angleLine.geometry;state.angleLine.geometry=new THREE.BufferGeometry().setFromPoints(pts);old.dispose();}
+  state.angleLine.visible=true;
+}
+function updateSectors(){
+  updateAngleArc();
+  if(!state.showAreas||!selectedBody()){sectorMeshes.forEach(m=>m.visible=false);return;}
+  const b=selectedBody(),d=state.selectedAreaInterval,t=state.simTime;
+  const a1=sectorData(b,t-2*d,t-d),a2=sectorData(b,t-d,t);
+  [a1,a2].forEach((data,i)=>{const mesh=sectorMeshes[i];mesh.visible=!!data;if(data){const old=mesh.geometry;mesh.geometry=buildSectorGeometry(data);old.dispose();}});
+  state.areaOne=a1?.area||0;state.areaTwo=a2?.area||0;
+}
+function updateVisuals(){
+  const star=starBody();if(!star)return;
+  star.visual.position.set(star.pos.x*SCALE,.06,star.pos.z*SCALE);
+  const sel=selectedBody();
+  for(const b of state.bodies){
+    if(b.isStar)continue;
+    b.visual.position.set(b.pos.x*SCALE,.04,b.pos.z*SCALE);
+    const s=star.pos.clone().sub(b.pos),r=s.length();const gMag=G_AU*star.mass/Math.max(r*r,1e-12);
+    const v=b.vel.clone().sub(star.vel);const vDir=v.lengthSq()>1e-12?v.clone().normalize():new THREE.Vector3(0,0,1);
+    const gDir=s.lengthSq()>1e-12?s.clone().normalize():new THREE.Vector3(-1,0,0);
+    const origin=new THREE.Vector3(b.pos.x*SCALE,.23,b.pos.z*SCALE);
+    const vLen=THREE.MathUtils.clamp(v.length()*.13,.24,1.0);const gLen=THREE.MathUtils.clamp(gMag*.032,.2,.92);
+    b.vArrow.position.copy(origin);b.vArrow.setDirection(vDir);b.vArrow.setLength(vLen,vLen*.2,vLen*.12);
+    b.gArrow.position.copy(origin);b.gArrow.setDirection(gDir);b.gArrow.setLength(gLen,gLen*.2,gLen*.12);
+    b.halo.position.set(b.pos.x*SCALE,.055,b.pos.z*SCALE);b.halo.visible=b===sel;
+    if(b.trail && b.history.length){
+      const last=b.history[b.history.length-1];const pt=new THREE.Vector3(((last.sx??star.pos.x)+last.x)*SCALE,.025,((last.sz??star.pos.z)+last.z)*SCALE);
+      if(!b.trail.last||pt.distanceTo(b.trail.last)>.008){if(b.trail.count<b.trail.max){b.trail.attr.setXYZ(b.trail.count,pt.x,pt.y,pt.z);b.trail.count++;b.trail.geo.setDrawRange(0,b.trail.count);b.trail.attr.needsUpdate=true;}else{const ar=b.trail.attr.array;ar.copyWithin(0,3);b.trail.count--;b.trail.attr.needsUpdate=true;b.trail.attr.setXYZ(b.trail.count,pt.x,pt.y,pt.z);b.trail.count++;b.trail.geo.setDrawRange(0,b.trail.count);}b.trail.last=pt;}
+    }
+  }
+  if(state.angleLine)state.angleLine.visible=state.measureMode==='angle';
+  if(state.rulerLine)state.rulerLine.visible=state.measureMode==='ruler'||!!state.rulerDistance;
+}
+
+function makeMeasureMarker(){return new THREE.Mesh(new THREE.SphereGeometry(.035,12,10),new THREE.MeshStandardMaterial({color:0xffe0a6,emissive:0xa66c2c,emissiveIntensity:.5}));}
+function clearRuler(){state.measurePoints=[];state.rulerDistance=null;if(state.rulerGroup){systemRoot.remove(state.rulerGroup);state.rulerGroup.traverse(o=>{if(o.geometry)o.geometry.dispose();});state.rulerGroup=null;}state.rulerLine=null;renderDOMPanel();drawVRPanel();}
+function addRulerPoint(point){
+  state.measurePoints.push(new THREE.Vector3(point.x,0.06,point.z));
+  if(state.measurePoints.length===2){const [a,b]=state.measurePoints;const dist=a.distanceTo(b)/SCALE;state.rulerDistance=dist;const group=new THREE.Group();group.userData.measurement=true;const geo=new THREE.BufferGeometry().setFromPoints([a,b]);const line=new THREE.Line(geo,new THREE.LineDashedMaterial({color:0xffcf83,dashSize:.12,gapSize:.07,linewidth:2}));line.computeLineDistances();group.add(line);const ma=makeMeasureMarker(),mb=makeMeasureMarker();ma.position.copy(a);mb.position.copy(b);group.add(ma,mb);systemRoot.add(group);state.rulerGroup=group;state.rulerLine=line;showToast(`Régua: ${dist.toFixed(3)} AU · ${(dist*AU_M/1000).toLocaleString('pt-BR',{maximumFractionDigits:0})} km`);state.measureMode='none';}
+  renderDOMPanel();drawVRPanel();
+}
+function findBodyFromIntersection(hit){let o=hit?.object;while(o){if(o.userData?.body)return o.userData.body;o=o.parent;}return null;}
+
+// ---------- Painel VR em CanvasTexture (sem DOM overlay) ----------
+const PANEL_W=1200,PANEL_H=860;
+const panelCanvas=document.createElement('canvas');panelCanvas.width=PANEL_W;panelCanvas.height=PANEL_H;
+const panelCtx=panelCanvas.getContext('2d');
+const panelTexture=new THREE.CanvasTexture(panelCanvas);panelTexture.colorSpace=THREE.SRGBColorSpace;panelTexture.anisotropy=2;
+const panelGroup=new THREE.Group();panelGroup.position.set(1.55,1.85,3.3);panelGroup.visible=false;scene.add(panelGroup);
+const frame=new THREE.Mesh(new THREE.BoxGeometry(1.95,1.42,.055),new THREE.MeshStandardMaterial({color:0x10243a,metalness:.72,roughness:.34,envMapIntensity:.8}));panelGroup.add(frame);
+const panelMesh=new THREE.Mesh(new THREE.PlaneGeometry(1.9,1.36),new THREE.MeshBasicMaterial({map:panelTexture,side:THREE.DoubleSide,toneMapped:false}));panelMesh.position.z=.031;panelGroup.add(panelMesh);
+const panelHits=[];
+function rounded(ctx,x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+function panelText(text,x,y,size=29,color='#eaf4ff',weight=500,align='left') {panelCtx.fillStyle=color;panelCtx.font=`${weight} ${size}px system-ui, sans-serif`;panelCtx.textAlign=align;panelCtx.textBaseline='middle';panelCtx.fillText(text,x,y);}
+function panelWrap(text,x,y,maxWidth,lineHeight=39,size=26,color='#cad8e8',weight=450){panelCtx.font=`${weight} ${size}px system-ui,sans-serif`;const words=text.split(' ');let line='',cy=y;for(const word of words){const test=line?line+' '+word:word;if(panelCtx.measureText(test).width>maxWidth&&line){panelText(line,x,cy,size,color,weight);line=word;cy+=lineHeight;}else line=test;}if(line)panelText(line,x,cy,size,color,weight);return cy+lineHeight;}
+function panelButton(x,y,w,h,label,action,kind='normal'){
+  const fill=kind==='primary'?'#176578':kind==='gold'?'#79542b':'#162d47';const stroke=kind==='primary'?'#62cbd5':kind==='gold'?'#d5a36c':'#3b5b79';rounded(panelCtx,x,y,w,h,15,fill,stroke);panelText(label,x+w/2,y+h/2,27,'#f2f8ff',750,'center');panelHits.push({x,y,w,h,action});
+}
+function panelSlider(label,val,min,max,step,x,y,w,action,fmt){
+  panelText(label,x,y-24,25,'#dce8f5',650);const text=fmt(val);panelText(text,x+w,y-24,25,'#79e6ec',800,'right');
+  const yy=y+24;rounded(panelCtx,x,yy,w,13,7,'#263b53');const ratio=(val-min)/(max-min);rounded(panelCtx,x,yy,Math.max(12,w*ratio),13,7,'#55c7d3');panelCtx.beginPath();panelCtx.arc(x+w*ratio,yy+6.5,16,0,TAU);panelCtx.fillStyle='#e9ffff';panelCtx.fill();panelCtx.strokeStyle='#2f9eae';panelCtx.lineWidth=4;panelCtx.stroke();panelHits.push({x:x-8,y:yy-28,w:w+16,h:62,action,slider:{min,max,step,x,w}});
+}
+function panelBase(){
+  panelHits.length=0;const g=panelCtx.createLinearGradient(0,0,PANEL_W,PANEL_H);g.addColorStop(0,'#081522');g.addColorStop(.55,'#10243a');g.addColorStop(1,'#091625');panelCtx.fillStyle=g;panelCtx.fillRect(0,0,PANEL_W,PANEL_H);
+  panelCtx.strokeStyle='rgba(105,205,218,.32)';panelCtx.lineWidth=3;panelCtx.strokeRect(12,12,PANEL_W-24,PANEL_H-24);
+  panelText('Ó R B I T A',38,42,24,'#80e3e8',850);panelText('LABORATÓRIO DE GRAVITAÇÃO',250,42,22,'#9db3cb',550);panelText(`${state.simTime.toFixed(2).replace('.',',')} ANOS`,1160,42,21,'#d1e6f3',750,'right');
+  const tabs=[['trilha','TRILHA'],['sandbox','SANDBOX'],['medidas','MEDIDAS'],['quiz','QUIZ'],['fontes','FONTES']];
+  const tw=216,gap=8,start=34;tabs.forEach(([id,label],i)=>{const x=start+i*(tw+gap),active=state.activeTab===id;rounded(panelCtx,x,76,tw,62,12,active?'#1a5366':'#14283f',active?'#6bd4df':'#344f6b');panelText(label,x+tw/2,107,23,active?'#ffffff':'#9db1c8',800,'center');panelHits.push({x,y:76,w:tw,h:62,action:()=>{state.activeTab=id;renderDOMPanel();drawVRPanel();}});});
+  panelCtx.strokeStyle='rgba(128,161,190,.22)';panelCtx.beginPath();panelCtx.moveTo(34,154);panelCtx.lineTo(1166,154);panelCtx.stroke();
+}
+function drawVRPanel(){
+  if(!panelCtx)return;panelBase();
+  if(state.activeTab==='trilha'){
+    const l=lessonSteps[state.lesson];panelText(`ETAPA ${state.lesson+1} DE 5  ·  ${l.time.toUpperCase()}`,52,190,22,'#78dce3',800);
+    panelText(l.title,52,242,39,'#f0f6ff',800);
+    panelWrap(l.body,52,300,1080,43,27,'#c8d7e7',480);
+    rounded(panelCtx,52,480,1096,115,17,'#0a1a2b','#3a5772');panelText('INVESTIGAÇÃO',78,510,20,'#ffca80',800);panelWrap(l.key,78,550,1030,37,25,'#f3e1c9',620);
+    rounded(panelCtx,52,615,1096,76,14,'#111f32','#304a64');panelText(l.eq,600,653,29,'#f7d6a0',700,'center');
+    panelButton(52,718,205,78,'← ANTERIOR',()=>lessonAction(-1));panelButton(943,718,205,78,'PRÓXIMA →',()=>lessonAction(1),'primary');
+  }else if(state.activeTab==='sandbox'){
+    panelText('CONSTRUA AS CONDIÇÕES INICIAIS',52,190,31,'#f1f7ff',800);
+    const s=state.settings;
+    panelSlider('Massa da estrela',s.starMass,.25,3,.05,70,258,1040,'starMass',v=>`${v.toFixed(2)} M☉`);
+    panelSlider('Massa do planeta',s.planetMass,.1,100,.1,70,365,1040,'planetMass',v=>`${v.toFixed(1)} M⊕`);
+    panelSlider('Distância inicial',s.distance,.45,3,.05,70,472,1040,'distance',v=>`${v.toFixed(2)} AU`);
+    panelSlider('Velocidade tangencial',s.speedFactor,.3,1.75,.01,70,579,1040,'speedFactor',v=>`${v.toFixed(2)} × v circular`);
+    panelButton(52,675,245,65,'CIRCULAR',()=>{state.settings.speedFactor=1;applyInitialConditions();},'primary');
+    panelButton(310,675,245,65,'ELÍPTICA',()=>{state.settings.speedFactor=.78;applyInitialConditions();},'gold');
+    panelButton(568,675,245,65,'ESCAPE',()=>{state.settings.speedFactor=Math.SQRT2;applyInitialConditions();},'normal');
+    panelButton(826,675,322,65,'LANÇAR OUTRO PLANETA',()=>spawnPlanet(),'primary');
+    panelButton(52,748,1096,60,'REINICIAR SISTEMA',()=>resetSystem(),'normal');
+  }else if(state.activeTab==='medidas'){
+    const m=computeMeasures();panelText('INSTRUMENTOS E GRANDEZAS EM TEMPO REAL',52,190,29,'#f1f7ff',800);
+    const cells=[['FORÇA GRAVITACIONAL',m?formatSI(m.force,'N'):'—'],['DISTÂNCIA AO FOCO',m?`${m.r.toFixed(3)} AU`:'—'],['VELOCIDADE ATUAL',m?`${m.velocityMS.toFixed(0)} m/s`:'—'],['EXCENTRICIDADE',m?m.e.toFixed(3):'—'],['PERÍODO PREVISTO',m?.period?`${m.period.toFixed(3)} anos`:'Órbita aberta'],['TAXA AREOLAR',m?`${m.arealRate.toFixed(4)} AU²/ano`:'—']];
+    cells.forEach((c,i)=>{const x=52+(i%3)*372,y=229+Math.floor(i/3)*119;rounded(panelCtx,x,y,350,94,14,'#0c1c2e','#2c455f');panelText(c[0],x+18,y+27,18,'#9eb3ca',700);panelText(c[1],x+18,y+66,29,'#e8f8ff',800);});
+    const a1=state.areaOne||0,a2=state.areaTwo||0;rounded(panelCtx,52,475,1096,99,14,'#112437','#38556e');panelText('2ª LEI · ÁREAS EM DOIS INTERVALOS IGUAIS',76,503,19,'#79e1e6',800);panelText(`A₁ = ${a1.toFixed(5)} AU²     A₂ = ${a2.toFixed(5)} AU²     Δt = ${state.selectedAreaInterval.toFixed(2)} ano`,76,543,25,'#f0d6a8',700);
+    panelButton(52,608,315,83,state.measureMode==='ruler'?'RÉGUA ATIVA · TOQUE 2 PONTOS':'ATIVAR RÉGUA',()=>{const enable=state.measureMode!=='ruler';clearRuler();state.measureMode=enable?'ruler':'none';showToast('Régua: aponte e selecione dois pontos no plano orbital.');renderDOMPanel();},'gold');
+    panelButton(385,608,350,83,state.measureMode==='angle'?'TRANSFERIDOR ATIVO':'MEDIR ÂNGULO v × r',()=>{state.measureMode=state.measureMode==='angle'?'none':'angle';showToast('Transferidor: selecione um planeta para medir o ângulo entre raio vetor e velocidade.');renderDOMPanel();},'normal');
+    panelButton(753,608,395,83,state.showAreas?'OCULTAR SETORES':'MOSTRAR SETORES DE ÁREA',()=>{state.showAreas=!state.showAreas;drawVRPanel();renderDOMPanel();},'primary');
+    if(m){panelText(`Ângulo r × v: ${(m.rvec.angleTo(m.vvec)*180/Math.PI).toFixed(1)}°`,600,745,24,'#c6b9ff',700,'center');}
+  }else if(state.activeTab==='quiz'){
+    const q=state.quiz;
+    if(!q.started){panelText('DESAFIO FINAL · 5 QUESTÕES',52,216,34,'#f1f7ff',800);panelWrap('Use as evidências da experiência para avaliar gravitação, forma das órbitas e as três leis de Kepler. Cada resposta recebe uma explicação científica.',52,283,1080,43,27,'#c6d6e8');panelButton(52,650,410,88,'INICIAR QUIZ',()=>{q.started=true;q.index=0;q.answers=[];q.feedback=false;q.finished=false;drawVRPanel();},'primary');}
+    else if(q.finished){const score=q.answers.filter((a,i)=>a===quizQuestions[i].correct).length;panelText('EXPERIÊNCIA CONCLUÍDA',52,230,38,'#9ce2bd',850);panelText(`Pontuação: ${score} / ${quizQuestions.length}`,52,310,32,'#eff8ff',750);panelWrap('Retome a trilha e refaça os experimentos que geraram dúvidas. A validação matemática dos cenários deve ser sistematizada na etapa Pós-VR, em sala de aula.',52,390,1060,43,27,'#cbd9e9');panelButton(52,680,300,82,'REFAZER QUIZ',()=>{q.started=true;q.index=0;q.answers=[];q.feedback=false;q.finished=false;drawVRPanel();},'primary');}
+    else{const item=quizQuestions[q.index];panelText(`QUESTÃO ${q.index+1} / ${quizQuestions.length}`,52,188,22,'#79dce4',800);panelWrap(item.q,52,238,1080,42,31,'#f1f6ff',750);if(!q.feedback){item.a.forEach((ans,i)=>panelButton(52,365+i*88,1096,70,`${String.fromCharCode(65+i)}  ·  ${ans}`,()=>quizAnswer(i),'normal'));}else{const chosen=q.answers[q.index],ok=chosen===item.correct;rounded(panelCtx,52,365,1096,250,16,ok?'#103329':'#351e25',ok?'#4baf80':'#aa5764');panelText(ok?'RESPOSTA CORRETA':'REVEJA ESTE CONCEITO',78,400,23,ok?'#98ebbd':'#ffabb1',850);panelWrap(item.why,78,458,1030,42,27,'#e0edf5',520);panelButton(52,690,350,82,q.index===quizQuestions.length-1?'VER RESULTADO':'PRÓXIMA QUESTÃO',()=>quizNext(),'primary');}}
+  }else{
+    panelText('CRÉDITOS E FONTES',52,205,35,'#f1f7ff',800);
+    panelWrap('Modelo, geometrias, texturas procedurais, gráficos, vetores e instrumentos: geração própria por código. Motor 3D: Three.js r160. Nenhuma imagem ou malha externa é carregada.',52,260,1080,40,25,'#cbd8e7');
+    const refs=['NASA · Orbits and Kepler’s Laws (fundamentos das três leis)','NASA · Gravity & Mechanics (aceleração orbital e gravitação)','OpenStax · University Physics, vol. 1, §13.5 (3ª Lei e período)','Three.js Manual · WebXR basics (VRButton e setAnimationLoop)','Khronos · OpenXR 1.1 (perfil de controles PICO Neo 3)','Needle · WebXR device notes (Pico Neo 3)'];
+    refs.forEach((t,i)=>{rounded(panelCtx,52,420+i*55,1096,44,10,'#10243a','#29445f');panelText(t,74,442+i*55,20,'#b9e4ed',600);});
+    panelText('Neo 3: o sinal do analógico é invertido automaticamente quando detectado no navegador.',52,775,17,'#94abc3',500);
+  }
+  panelCtx.fillStyle='rgba(5,12,21,.88)';panelCtx.fillRect(0,813,PANEL_W,35);panelText('GATILHO: selecionar  ·  GRIP: agarrar planeta  ·  THUMBSTICK: teleporte / giro em 30°',PANEL_W/2,830,17,'#9db4c9',550,'center');
+  panelTexture.needsUpdate=true;
+}
+function formatSI(value,unit){if(!Number.isFinite(value))return '—';if(value===0)return `0 ${unit}`;const a=Math.abs(value);if(a>=1e6)return `${(value/1e6).toPrecision(3)} × 10⁶ ${unit}`;if(a>=1e3)return `${value.toLocaleString('pt-BR',{maximumFractionDigits:1})} ${unit}`;if(a>=.01)return `${value.toPrecision(3)} ${unit}`;return `${value.toExponential(2)} ${unit}`;}
+function lessonAction(direction){state.lesson=THREE.MathUtils.clamp(state.lesson+direction,0,lessonSteps.length-1);const l=lessonSteps[state.lesson];showCaption(`${l.title}. ${l.key}`);if(state.narration&&!state.muted)speak(`${l.title}. ${l.body} ${l.key}`);renderDOMPanel();drawVRPanel();}
+function quizAnswer(i){const q=state.quiz;if(q.feedback||q.finished)return;q.answers[q.index]=i;q.feedback=true;renderDOMPanel();drawVRPanel();}
+function quizNext(){const q=state.quiz;if(q.index<quizQuestions.length-1){q.index++;q.feedback=false;}else{q.finished=true;}renderDOMPanel();drawVRPanel();}
+function panelAction(action,x,y){
+  if(typeof action==='function'){action();return;}
+  if(action==='lesson-prev')lessonAction(-1);else if(action==='lesson-next')lessonAction(1);
+  else if(action==='starMass'||action==='planetMass'||action==='distance'||action==='speedFactor'){
+    const hit=panelHits.find(h=>h.slider&&h.action===action);if(hit){const ratio=THREE.MathUtils.clamp((x-hit.slider.x)/hit.slider.w,0,1);const raw=hit.slider.min+ratio*(hit.slider.max-hit.slider.min);state.settings[action]=Math.round(raw/hit.slider.step)*hit.slider.step;
+      if(action==='starMass'){const s=starBody();if(s){s.mass=state.settings.starMass;updateBodyMassVisual(s);calculateAccelerations();}}
+      if(action==='planetMass'){const b=selectedBody();if(b){b.mass=state.settings.planetMass*M_EARTH/M_SUN;updateBodyMassVisual(b);calculateAccelerations();}}
+      renderDOMPanel();drawVRPanel();
+    }
+  }else if(action==='presetCircular'){state.settings.speedFactor=1;applyInitialConditions();}
+  else if(action==='presetEllipse'){state.settings.speedFactor=.78;applyInitialConditions();}
+  else if(action==='presetEscape'){state.settings.speedFactor=Math.SQRT2;applyInitialConditions();}
+  else if(action==='spawn')spawnPlanet();
+  else if(action==='measureRuler'){const enable=state.measureMode!=='ruler';clearRuler();state.measureMode=enable?'ruler':'none';showToast('Aponte o controle para dois pontos do plano orbital e pressione o gatilho.');}
+  else if(action==='measureAngle'){state.measureMode=state.measureMode==='angle'?'none':'angle';showToast('Aponte para o planeta; o ângulo r × v será exibido.');}
+  else if(action==='toggleAreas'){state.showAreas=!state.showAreas;}
+  else if(action==='quiz-start'){state.quiz.started=true;state.quiz.index=0;state.quiz.answers=[];state.quiz.feedback=false;state.quiz.finished=false;}
+  else if(action.startsWith('quiz-answer-'))quizAnswer(Number(action.split('-').pop()));
+  else if(action==='quiz-next')quizNext();
+  renderDOMPanel();drawVRPanel();
+}
+function onPanelPoint(canvasX,canvasY){const hit=[...panelHits].reverse().find(h=>canvasX>=h.x&&canvasX<=h.x+h.w&&canvasY>=h.y&&canvasY<=h.y+h.h);if(hit){if(hit.slider)panelAction(hit.action,canvasX,canvasY);else panelAction(hit.action,canvasX,canvasY);}}
+
+// ---------- Interface para navegador (desktop/tablet) ----------
+function setTab(tab){state.activeTab=tab;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));renderDOMPanel();drawVRPanel();}
+function renderDOMPanel(){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===state.activeTab));
+  const s=state.settings;let html='';
+  if(state.activeTab==='trilha'){
+    const l=lessonSteps[state.lesson];html=`<div class="lessonMeta"><span>TRILHA GUIADA · ${state.lesson+1}/5</span><span>${l.time}</span></div><div class="progress"><i style="width:${(state.lesson+1)/5*100}%"></i></div><div class="lessonCard"><div class="lessonMeta"><span>APLICAÇÃO / IMERSÃO</span><span>EM VR</span></div><h2>${l.title}</h2><p>${l.body}</p></div><div class="callout info"><b>Missão de investigação</b><br>${l.key}</div><div class="equation">${l.eq}</div><div class="btnRow"><button class="btn ghost" data-action="lesson-prev" ${state.lesson===0?'disabled':''}>← Anterior</button><button class="btn primary" data-action="lesson-next" ${state.lesson===4?'disabled':''}>Próxima etapa →</button></div><hr class="divider"><div class="subtle"><b>Sequência sugerida · 40 minutos</b><br>4 min observatório · 7 min gravitação · 9 min lançamentos · 10 min leis de Kepler · 8 min projeto livre · 2 min quiz. A sistematização matemática pós-experiência permanece na aula presencial.</div>`;
+  }else if(state.activeTab==='sandbox'){
+    const b=selectedBody();html=`<h2 class="sectionTitle">Construtor de sistema planetário</h2><p class="subtle">Ajuste parâmetros físicos. A massa estelar modifica imediatamente a dinâmica do sistema; massa, distância e velocidade são aplicadas ao planeta selecionado ao reconfigurar.</p>
+      <div class="field"><div class="fieldHead"><label for="starMass">Massa da estrela</label><output id="starMassVal">${s.starMass.toFixed(2)} M☉</output></div><input class="range" id="starMass" type="range" min="0.25" max="3" step="0.05" value="${s.starMass}"><div class="miniNote">A alteração modifica a aceleração gravitacional de todos os planetas.</div></div>
+      <div class="field"><div class="fieldHead"><label for="planetMass">Massa do planeta</label><output id="planetMassVal">${s.planetMass.toFixed(1)} M⊕</output></div><input class="range" id="planetMass" type="range" min="0.1" max="100" step="0.1" value="${s.planetMass}"><div class="miniNote">A massa é convertida para massas solares no integrador N-corpos.</div></div>
+      <div class="field"><div class="fieldHead"><label for="distance">Distância inicial</label><output id="distanceVal">${s.distance.toFixed(2)} AU</output></div><input class="range" id="distance" type="range" min="0.45" max="3" step="0.05" value="${s.distance}"></div>
+      <div class="field"><div class="fieldHead"><label for="speedFactor">Velocidade tangencial</label><output id="speedFactorVal">${s.speedFactor.toFixed(2)} × v circular</output></div><input class="range" id="speedFactor" type="range" min="0.3" max="1.75" step="0.01" value="${s.speedFactor}"><div class="miniNote">v circular = √[G(M+m)/r]. A razão acima de √2 supera a velocidade de escape no modelo de dois corpos.</div></div>
+      <div class="btnRow"><button class="btn primary" data-action="apply">Aplicar ao selecionado</button><button class="btn gold" data-action="spawn">+ Lançar planeta</button></div>
+      <div class="btnRow"><button class="btn" data-action="preset-circular">Circular · 1,00</button><button class="btn" data-action="preset-ellipse">Elíptica · 0,78</button><button class="btn" data-action="preset-escape">Escape · √2</button></div>
+      <hr class="divider"><div class="field"><div class="fieldHead"><label for="simRate">Velocidade do tempo simulado</label><output id="simRateVal">${s.simRate.toFixed(2)} ano/s</output></div><input class="range" id="simRate" type="range" min="0.05" max="0.35" step="0.01" value="${s.simRate}"><div class="miniNote">O integrador usa passo máximo de 0,0005 ano e reduz o passo perto de encontros rápidos; o controle altera apenas a taxa simulada.</div></div>
+      <div class="subtle">Corpo selecionado: <b>${b?b.name:'nenhum'}</b> · ${state.bodies.filter(x=>!x.isStar).length}/${MAX_PLANETS} planetas. Máximo de seis planetas por desempenho em VR.</div>`;
+  }else if(state.activeTab==='medidas'){
+    const m=computeMeasures(),b=selectedBody();const ang=m?m.rvec.angleTo(m.vvec)*180/Math.PI:0;
+    html=`<h2 class="sectionTitle">Painel de instrumentos</h2><p class="subtle">Leituras calculadas para ${b?.name||'o corpo selecionado'}. Os elementos orbitais são osciladores de dois corpos; planetas adicionais podem produzir pequenas perturbações.</p>
+      <div class="statGrid">
+        <div class="stat"><label>Força gravitacional</label><strong>${m?formatSI(m.force,'N'):'—'}</strong><small>F = GMm/r²</small></div>
+        <div class="stat"><label>Distância ao foco</label><strong>${m?m.r.toFixed(4)+' AU':'—'}</strong><small>${m?(m.r*AU_M/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1})+' milhões km':''}</small></div>
+        <div class="stat"><label>Velocidade atual</label><strong>${m?m.velocityMS.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m/s':'—'}</strong><small>v circular: ${m?m.vcircMS.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m/s':'—'}</small></div>
+        <div class="stat"><label>Excentricidade</label><strong>${m?m.e.toFixed(4):'—'}</strong><small>${m?(m.energy<0?(m.e<.01?'Quase circular':'Elíptica'):(Math.abs(m.e-1)<.02?'Parabólica (limite)':'Hiperbólica / aberta')):''}</small></div>
+        <div class="stat"><label>Período orbital</label><strong>${m?.period?m.period.toFixed(4)+' anos':'Não periódico'}</strong><small>${m?.peri!=null?'a = '+m.a.toFixed(3)+' AU':''}</small></div>
+        <div class="stat"><label>Periélio / afélio</label><strong>${m?.peri!=null?m.peri.toFixed(3)+' / '+m.apo.toFixed(3):'—'}</strong><small>AU · distâncias relativas ao foco</small></div>
+      </div>
+      <div class="callout"><b>Comparador circular</b><br>${m?`v escape = ${m.vescMS.toLocaleString('pt-BR',{maximumFractionDigits:0})} m/s. Para uma órbita circular na distância atual, força centrípeta na coordenada relativa (massa reduzida) = ${formatSI(m.fCircular,'N')}; ela coincide com a atração gravitacional para a velocidade circular calculada.`:'Lance ou selecione um planeta.'}</div>
+      <div class="chartWrap"><div class="fieldHead"><span>Histórico em tempo real</span><span>r(t) e v(t), normalizados</span></div><canvas id="liveChart" width="680" height="210" aria-label="Gráfico de distância e velocidade ao longo do tempo"></canvas><div class="chartLegend"><span><i class="dot" style="background:#5fd9e4"></i>Distância r</span><span><i class="dot" style="background:#ffbf70"></i>Velocidade v</span></div></div>
+      <div class="callout info"><b>2ª Lei de Kepler</b><br>Dois setores sucessivos usam intervalos iguais de ${state.selectedAreaInterval.toFixed(2)} ano. A comparação numérica é construída com posições registradas pela integração.</div>
+      <div class="statGrid"><div class="stat"><label>Área 1 · Δt fixo</label><strong>${(state.areaOne||0).toFixed(5)} AU²</strong></div><div class="stat"><label>Área 2 · Δt fixo</label><strong>${(state.areaTwo||0).toFixed(5)} AU²</strong></div><div class="stat"><label>Ângulo entre r e v</label><strong>${ang.toFixed(2)}°</strong><small>transferidor vetorial</small></div><div class="stat"><label>Lei 3 · T²/a³</label><strong>${m?.ratio?m.ratio.toFixed(4):'—'}</strong><small>previsto: ${m?.expected?m.expected.toFixed(4):'—'} ano²/AU³</small></div></div>
+      <div class="btnRow"><button class="btn gold" data-action="ruler">${state.measureMode==='ruler'?'Régua ativa · selecione 2 pontos':'Ativar régua 3D'}</button><button class="btn" data-action="angle">${state.measureMode==='angle'?'Transferidor ativo':'Transferidor v × r'}</button><button class="btn primary" data-action="areas">${state.showAreas?'Ocultar áreas':'Mostrar áreas'}</button></div>
+      ${state.rulerDistance!=null?`<div class="callout">Régua: <b>${state.rulerDistance.toFixed(4)} AU</b> · ${(state.rulerDistance*AU_M/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})} km <button class="btn ghost" data-action="clear-ruler">Limpar</button></div>`:''}`;
+  }else if(state.activeTab==='quiz'){
+    const q=state.quiz;
+    if(!q.started){html=`<h2 class="sectionTitle">Quiz de validação · 5 questões</h2><p class="subtle">O quiz verifica os objetivos da experiência: interpretar a interação gravitacional, prever mudanças de velocidade e distância e aplicar as três leis de Kepler.</p><div class="lessonCard"><div class="lessonMeta"><span>AVALIAÇÃO FORMATIVA</span><span>FEEDBACK EXPLICATIVO</span></div><h2>Da experimentação à previsão</h2><p>Responda com base nas evidências observadas no sistema que você construiu. Após cada resposta, leia a explicação física.</p></div><button class="btn primary" data-action="quiz-start">Iniciar quiz →</button>`;}
+    else if(q.finished){const score=q.answers.filter((a,i)=>a===quizQuestions[i].correct).length;html=`<h2 class="sectionTitle">Resultado do quiz</h2><div class="lessonCard"><div class="lessonMeta"><span>CONCLUÍDO</span><span>${score}/${quizQuestions.length} ACERTOS</span></div><h2>${score>=4?'Excelente investigação!':score>=3?'Boa leitura dos fenômenos.':'Retome os experimentos e tente novamente.'}</h2><p>${score} respostas corretas em ${quizQuestions.length}. Use as explicações para identificar conceitos que precisam ser aprofundados.</p></div><div class="progress"><i style="width:${score/quizQuestions.length*100}%"></i></div><button class="btn primary" data-action="quiz-retry">Refazer quiz</button>`;}
+    else{const item=quizQuestions[q.index],chosen=q.answers[q.index];html=`<div class="lessonMeta"><span>QUESTÃO ${q.index+1} DE ${quizQuestions.length}</span><span>${Math.round(q.index/quizQuestions.length*100)}% concluído</span></div><div class="progress"><i style="width:${q.index/quizQuestions.length*100}%"></i></div><h2 class="sectionTitle">${item.q}</h2>${item.a.map((a,i)=>`<button class="quizOption ${q.feedback&&i===item.correct?'correct':''} ${q.feedback&&chosen===i&&i!==item.correct?'wrong':''}" data-action="quiz-answer" data-answer="${i}" ${q.feedback?'disabled':''}>${String.fromCharCode(65+i)}. ${a}</button>`).join('')}${q.feedback?`<div class="quizFeedback"><b>${chosen===item.correct?'Correto.':'Ainda não.'}</b> ${item.why}</div><div class="btnRow"><button class="btn primary" data-action="quiz-next">${q.index===quizQuestions.length-1?'Ver resultado':'Próxima questão →'}</button></div>`:''}`;}
+  }else{
+    html=`<h2 class="sectionTitle">Créditos e fontes consultadas</h2><p class="subtle">Cena, corpos, geometrias, materiais PBR, texturas, partículas, vetores, setores, régua, transferidor e gráficos foram gerados proceduralmente neste arquivo. Não há modelos ou imagens externas.</p><div class="lessonCard"><h2>Motor e compatibilidade</h2><p>Three.js r160 via jsDelivr; módulos ES e addons oficiais VRButton e RoomEnvironment. WebXR usa referência local-floor, setAnimationLoop e foveação quando oferecida pelo runtime.</p></div>
+      <a class="sourceLink" target="_blank" rel="noopener" href="https://science.nasa.gov/solar-system/orbits-and-keplers-laws/">NASA Science — Orbits and Kepler’s Laws (forma elíptica, áreas iguais e relação período–semieixo).</a>
+      <a class="sourceLink" target="_blank" rel="noopener" href="https://science.nasa.gov/learn/basics-of-space-flight/chapter3-3/">NASA — Gravity & Mechanics (aceleração orbital e gravitação).</a>
+      <a class="sourceLink" target="_blank" rel="noopener" href="https://openstax.org/books/university-physics-volume-1/pages/13-5-keplers-laws-of-planetary-motion">OpenStax — University Physics, vol. 1, §13.5 (3ª Lei e período orbital).</a>
+      <a class="sourceLink" target="_blank" rel="noopener" href="https://openstax.org/books/university-physics-volume-1/pages/13-key-equations">OpenStax — Key Equations (gravitação, energia e velocidade orbital).</a>
+      <a class="sourceLink" target="_blank" rel="noopener" href="https://threejs.org/manual/pages/webxr-basics.html">Three.js Manual — WebXR basics (VRButton e setAnimationLoop).</a>
+      <a class="sourceLink" target="_blank" rel="noopener" href="https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html">Khronos — OpenXR 1.1 Specification (perfil de interação do controlador PICO Neo 3).</a>
+      <a class="sourceLink" target="_blank" rel="noopener" href="https://engine.needle.tools/docs/how-to-guides/xr/">Needle — WebXR device support (Neo 3 no Pico Browser; analógicos com eixo invertido).</a>
+      <hr class="divider"><p class="miniNote">Nota científica: o código integra gravitação newtoniana mútua entre os corpos. A leitura de elementos orbitais (a, e, T) é uma estimativa osculadora de dois corpos em torno da estrela; perturbações de outros planetas são possíveis. O modelo não inclui relatividade, marés, pressão de radiação nem estrutura interna dos corpos.</p>
+      <p class="miniNote">Nota de execução: o modo 3D funciona como arquivo local com conexão à CDN. A entrada imersiva depende de o navegador Pico expor WebXR immersive-vr e permitir sessão no contexto em que o arquivo foi aberto; o contexto file:// é considerado potencialmente confiável em navegadores compatíveis, mas políticas do navegador/dispositivo podem ainda exigir HTTPS ou localhost.</p>`;
+  }
+  panelBody.innerHTML=html;drawVRPanel();
+  if(state.activeTab==='medidas')drawChart();
+}
+function updateSliderReadouts(){
+  const s=state.settings;const values={starMass:`${s.starMass.toFixed(2)} M☉`,planetMass:`${s.planetMass.toFixed(1)} M⊕`,distance:`${s.distance.toFixed(2)} AU`,speedFactor:`${s.speedFactor.toFixed(2)} × v circular`,simRate:`${s.simRate.toFixed(2)} ano/s`};
+  Object.entries(values).forEach(([id,v])=>{const o=$(`#${id}Val`);if(o)o.textContent=v;const inp=$(`#${id}`);if(inp&&document.activeElement!==inp)inp.value=s[id];});
+}
+function drawChart(){
+  const c=$('#liveChart');if(!c)return;const ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.strokeStyle='#243a51';ctx.lineWidth=1;for(let i=1;i<5;i++){ctx.beginPath();ctx.moveTo(0,i*h/5);ctx.lineTo(w,i*h/5);ctx.stroke();}
+  const b=selectedBody(),hist=b?.history||[];if(hist.length<2){ctx.fillStyle='#9eb3c8';ctx.font='22px system-ui';ctx.fillText('Aguardando dados orbitais…',18,h/2);return;}
+  const data=hist.slice(-220);const rs=data.map(p=>Math.hypot(p.x,p.z)),vs=data.map(p=>Math.hypot(p.vx,p.vz));const rmin=Math.min(...rs),rmax=Math.max(...rs),vmin=Math.min(...vs),vmax=Math.max(...vs);
+  function line(vals,min,max,color){ctx.beginPath();vals.forEach((v,i)=>{const x=12+i/(vals.length-1)*(w-24),y=h-12-(v-min)/(max-min||1)*(h-24);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.strokeStyle=color;ctx.lineWidth=3;ctx.stroke();}
+  line(rs,rmin,rmax,'#5fd9e4');line(vs,vmin,vmax,'#ffbf70');ctx.fillStyle='#94a9c1';ctx.font='18px system-ui';ctx.fillText(`${data[0].t.toFixed(2)}–${data[data.length-1].t.toFixed(2)} anos`,14,22);
+}
+function updateDynamicDOM(){
+  $('#timeStatus').textContent=`${state.simTime.toFixed(2).replace('.',',')} anos`;
+  $('#modeStatus').textContent=state.xr?'MODO IMERSIVO':(state.running?'SIMULAÇÃO ATIVA':'SIMULAÇÃO PAUSADA');
+  $('#pauseBtn').textContent=state.running?'Ⅱ Pausar':'▶ Continuar';
+  updateSliderReadouts();
+  if(state.activeTab==='medidas'){
+    const m=computeMeasures();const map={};
+    const stats=$$('.stat strong');
+    if(stats.length&&m){
+      const vals=[formatSI(m.force,'N'),`${m.r.toFixed(4)} AU`,`${m.velocityMS.toLocaleString('pt-BR',{maximumFractionDigits:0})} m/s`,m.e.toFixed(4),m.period?m.period.toFixed(4)+' anos':'Não periódico',m.peri!=null?m.peri.toFixed(3)+' / '+m.apo.toFixed(3):'—'];
+      vals.forEach((v,i)=>{if(stats[i])stats[i].textContent=v;});
+    }
+    if(performance.now()-state.lastChart>500){drawChart();state.lastChart=performance.now();}
+  }
+}
+function $$(sel){return [...document.querySelectorAll(sel)];}
+function updateAllPanels(){renderDOMPanel();drawVRPanel();updateDynamicDOM();}
+
+// ---------- Input desktop / tablet ----------
+function setRayFromPointer(ev){const rect=view.getBoundingClientRect();pointerNDC.x=((ev.clientX-rect.left)/rect.width)*2-1;pointerNDC.y=-((ev.clientY-rect.top)/rect.height)*2+1;raycaster.setFromCamera(pointerNDC,camera);}
+function pointerPlanePoint(ev){setRayFromPointer(ev);const p=new THREE.Vector3();return raycaster.ray.intersectPlane(planeOrbital,p)?p:null;}
+function onPointerDown(ev){
+  if(state.xr)return;view.setPointerCapture?.(ev.pointerId);state.pointer.down=true;state.pointer.x=ev.clientX;state.pointer.y=ev.clientY;state.pointer.mode='';
+  setRayFromPointer(ev);
+  if(state.measureMode==='ruler'){const p=pointerPlanePoint(ev);if(p)addRulerPoint(p);state.pointer.mode='measure';return;}
+  const planetMeshes=state.bodies.filter(b=>!b.isStar).map(b=>b.sphere);const hits=raycaster.intersectObjects(planetMeshes,false);
+  if(state.measureMode==='angle'){
+    if(hits.length){const b=hits[0].object.userData.body;state.selectedId=b.id;const m=computeMeasures(b);showToast(`Transferidor: ${m?`${(m.rvec.angleTo(m.vvec)*180/Math.PI).toFixed(1)}° entre r e v`:''}`);updateAllPanels();}
+    state.pointer.mode='measure';
+  }else if(hits.length){const body=hits[0].object.userData.body||findBodyFromIntersection(hits[0]);if(body){state.selectedId=body.id;state.pointer.mode='drag';state.pointer.body=body;state.pointer.start=body.pos.clone();state.pointer.velocity=body.vel.clone();showToast(`${body.name} selecionado · arraste para reposicionar.`);updateAllPanels();}}
+  else state.pointer.mode='orbit';
+}
+function onPointerMove(ev){if(!state.pointer.down||state.xr)return;const dx=ev.clientX-state.pointer.x,dy=ev.clientY-state.pointer.y;state.pointer.x=ev.clientX;state.pointer.y=ev.clientY;
+  if(state.pointer.mode==='drag'&&state.pointer.body){const p=pointerPlanePoint(ev);if(p){const star=starBody();const b=state.pointer.body;b.pos.set(p.x/SCALE,0,p.z/SCALE);b.vel.set(0,0,0);calculateAccelerations();clearTrail(b);updateVisuals();}}
+  else if(state.pointer.mode==='orbit'){const o=state.cameraOrbit;o.theta-=dx*.006;o.phi=THREE.MathUtils.clamp(o.phi+dy*.005,.12,1.43);updateDesktopCamera();}
+}
+function onPointerUp(){if(!state.pointer.down)return;if(state.pointer.mode==='drag'&&state.pointer.body){const b=state.pointer.body;b.vel.copy(state.pointer.velocity||new THREE.Vector3());clearTrail(b);recordHistory(true);calculateAccelerations();showToast('Planeta reposicionado; a velocidade anterior foi preservada.');}state.pointer.down=false;state.pointer.mode='';state.pointer.body=null;updateVisuals();}
+function updateDesktopCamera(){const o=state.cameraOrbit;camera.position.set(o.target.x+o.radius*Math.sin(o.theta)*Math.cos(o.phi),o.target.y+o.radius*Math.sin(o.phi),o.target.z+o.radius*Math.cos(o.theta)*Math.cos(o.phi));camera.lookAt(o.target);}
+view.addEventListener('pointerdown',onPointerDown);view.addEventListener('pointermove',onPointerMove);view.addEventListener('pointerup',onPointerUp);view.addEventListener('pointercancel',onPointerUp);
+view.addEventListener('wheel',ev=>{if(state.xr)return;state.cameraOrbit.radius=THREE.MathUtils.clamp(state.cameraOrbit.radius+Math.sign(ev.deltaY)*.55,6,24);updateDesktopCamera();},{passive:true});
+const keys=new Set();window.addEventListener('keydown',e=>{if(['w','a','s','d','W','A','S','D',' '].includes(e.key)&&!['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)){keys.add(e.key.toLowerCase());if(e.key===' ')state.running=!state.running;}});window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
+function moveDesktop(dt){if(state.xr)return;const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=dt*5.5;if(keys.has('w'))state.cameraOrbit.target.addScaledVector(forward,v);if(keys.has('s'))state.cameraOrbit.target.addScaledVector(forward,-v);if(keys.has('a'))state.cameraOrbit.target.addScaledVector(right,-v);if(keys.has('d'))state.cameraOrbit.target.addScaledVector(right,v);if(keys.size)updateDesktopCamera();}
+
+// ---------- Controladores XR: gatilho, grip, thumbstick, teleporte ----------
+const xrControllers=[];
+function makeVignette(){
+  const mat=new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,uniforms:{uOpacity:{value:0}},vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',fragmentShader:'varying vec2 vUv;uniform float uOpacity;void main(){float d=distance(vUv,vec2(.5));float edge=smoothstep(.28,.78,d);gl_FragColor=vec4(0.0,0.0,0.0,edge*uOpacity);}',toneMapped:false});
+  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat);mesh.position.set(0,0,-.55);mesh.renderOrder=999;camera.add(mesh);state.vignetteMat=mat;
+}
+makeVignette();
+function createXRControllers(){
+  for(let i=0;i<2;i++){
+    const controller=renderer.xr.getController(i);scene.add(controller);
+    const rayGeo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,-1)]);const rayLine=new THREE.Line(rayGeo,new THREE.LineBasicMaterial({color:0x7debf0,transparent:true,opacity:.85}));rayLine.scale.z=3.2;controller.add(rayLine);
+    const grip=renderer.xr.getControllerGrip(i);scene.add(grip);
+    controller.addEventListener('connected',ev=>{controller.userData.inputSource=ev.data;controller.userData.gamepad=ev.data?.gamepad;});
+    controller.addEventListener('disconnected',()=>{controller.userData.inputSource=null;controller.userData.gamepad=null;});
+    controller.addEventListener('selectstart',()=>handleXRSelect(controller));
+    controller.addEventListener('squeezestart',()=>startXRGrab(grip));
+    controller.addEventListener('squeezeend',()=>endXRGrab());
+    xrControllers.push({controller,grip,rayLine});
+  }
+}
+createXRControllers();
+function setRayFromController(controller){controller.updateMatrixWorld(true);tmpMatrix.identity().extractRotation(controller.matrixWorld);raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);raycaster.ray.direction.set(0,0,-1).applyMatrix4(tmpMatrix).normalize();}
+function handleXRSelect(controller){
+  setRayFromController(controller);const hit=raycaster.intersectObject(panelMesh,false)[0];
+  if(hit){const uv=hit.uv;onPanelPoint(uv.x*PANEL_W,(1-uv.y)*PANEL_H);return;}
+  if(state.measureMode==='ruler'){
+    const p=new THREE.Vector3();if(raycaster.ray.intersectPlane(planeOrbital,p))addRulerPoint(p);return;
+  }
+  if(state.measureMode==='angle'){
+    const meshes=state.bodies.filter(b=>!b.isStar).map(b=>b.sphere);const hits=raycaster.intersectObjects(meshes,false);if(hits.length){const b=hits[0].object.userData.body;state.selectedId=b.id;const m=computeMeasures(b);showToast(`Ângulo entre r e v: ${(m.rvec.angleTo(m.vvec)*180/Math.PI).toFixed(1)}°`);updateAllPanels();}return;
+  }
+  const meshes=state.bodies.filter(b=>!b.isStar).map(b=>b.sphere);const hits=raycaster.intersectObjects(meshes,false);if(hits.length){const b=hits[0].object.userData.body;state.selectedId=b.id;showToast(`${b.name} selecionado.`);updateAllPanels();}
+}
+function startXRGrab(grip){
+  grip.updateMatrixWorld(true);const p=grip.getWorldPosition(new THREE.Vector3());let nearest=null,dist=.5;
+  for(const b of state.bodies.filter(x=>!x.isStar)){const q=b.visual.getWorldPosition(new THREE.Vector3());const d=p.distanceTo(q);if(d<dist){dist=d;nearest=b;}}
+  if(nearest){state.xrGrab={body:nearest,grip,velocity:nearest.vel.clone()};state.selectedId=nearest.id;state.running=false;showToast(`Grip: agarrando ${nearest.name}. Solte para reposicionar.`);updateAllPanels();}
+}
+function endXRGrab(){if(state.xrGrab){state.xrGrab.body.vel.copy(state.xrGrab.velocity);clearTrail(state.xrGrab.body);recordHistory(true);state.xrGrab=null;calculateAccelerations();state.running=true;syncToolbar();showToast('Planeta solto; a simulação foi retomada.');}}
+function updateXRGrab(){if(!state.xrGrab)return;const p=state.xrGrab.grip.getWorldPosition(new THREE.Vector3());const local=systemRoot.worldToLocal(p.clone());const b=state.xrGrab.body;b.pos.set(local.x/SCALE,0,local.z/SCALE);b.vel.set(0,0,0);b.visual.position.set(local.x,.04,local.z);calculateAccelerations();}
+function teleportFromStick(direction){
+  const forward=camera.getWorldDirection(new THREE.Vector3());forward.y=0;forward.normalize();cameraRig.position.addScaledVector(forward,direction*1.75);state.vignetteTime=.45;showToast('Teleporte realizado.');
+}
+function rotateSnap(direction){cameraRig.rotation.y+=direction*Math.PI/6;state.vignetteTime=.32;}
+function updateThumbsticks(now){
+  const session=renderer.xr.getSession();if(!session)return;
+  for(const src of session.inputSources){const gp=src.gamepad;if(!gp)continue;const axes=gp.axes||[];const rawX=axes.length>=4?axes[2]:(axes[0]||0);const rawY=axes.length>=4?axes[3]:(axes[1]||0);const invert=IS_PICO_NEO3?-1:1;const x=rawX*invert,y=rawY*invert;const hand=src.handedness==='right'?'right':'left';
+    if(hand==='left'){if(Math.abs(y)>.72&&!state.xrStick.left){teleportFromStick(y<0?1:-1);state.xrStick.left=true;}else if(Math.abs(y)<.25)state.xrStick.left=false;}
+    if(Math.abs(x)>.78&&!state.xrStick[hand]){rotateSnap(x>0?-1:1);state.xrStick[hand]=true;}else if(Math.abs(x)<.25)state.xrStick[hand]=false;
+  }
+}
+
+// ---------- Interações e acessibilidade ----------
+function showToast(text){state.toastText=text;state.toastUntil=performance.now()+2600;const el=$('#toast');el.textContent=text;el.style.opacity='1';}
+function showCaption(text){const el=$('#caption');if(!state.captions){el.style.display='none';return;}el.textContent=text;el.style.display='block';}
+function speak(text){if(!('speechSynthesis'in window)||state.muted||!state.narration)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='pt-BR';u.rate=.94;window.speechSynthesis.speak(u);}
+function syncToolbar(){
+  $('#pauseBtn').textContent=state.running?'Ⅱ Pausar':'▶ Continuar';$('#seatBtn').textContent=state.seated?'◉ Sentado':'◉ Em pé';$('#captionBtn').textContent=`Legendas: ${state.captions?'sim':'não'}`;$('#narrationBtn').textContent=`Narração: ${state.narration?'on':'off'}`;$('#muteBtn').textContent=`Som: ${state.muted?'mudo':'ativo'}`;
+  $('#captionBtn').classList.toggle('active',state.captions);$('#narrationBtn').classList.toggle('active',state.narration);$('#contrastBtn').classList.toggle('active',state.highContrast);
+}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+panelBody.addEventListener('click',ev=>{const btn=ev.target.closest('[data-action]');if(!btn)return;const a=btn.dataset.action;
+  if(a==='lesson-prev')lessonAction(-1);else if(a==='lesson-next')lessonAction(1);else if(a==='apply')applyInitialConditions();else if(a==='spawn')spawnPlanet();else if(a==='preset-circular'){state.settings.speedFactor=1;applyInitialConditions();}else if(a==='preset-ellipse'){state.settings.speedFactor=.78;applyInitialConditions();}else if(a==='preset-escape'){state.settings.speedFactor=Math.SQRT2;applyInitialConditions();}
+  else if(a==='ruler'){const enable=state.measureMode!=='ruler';clearRuler();state.measureMode=enable?'ruler':'none';showToast('Régua: selecione dois pontos do plano orbital.');renderDOMPanel();}else if(a==='angle'){state.measureMode=state.measureMode==='angle'?'none':'angle';showToast('Selecione um planeta para medir o ângulo r × v.');renderDOMPanel();}else if(a==='areas'){state.showAreas=!state.showAreas;renderDOMPanel();}else if(a==='clear-ruler')clearRuler();else if(a==='quiz-start'){state.quiz.started=true;renderDOMPanel();}else if(a==='quiz-retry'){state.quiz={started:true,index:0,answers:[],feedback:false,finished:false};renderDOMPanel();}else if(a==='quiz-answer')quizAnswer(Number(btn.dataset.answer));else if(a==='quiz-next')quizNext();
+});
+panelBody.addEventListener('input',ev=>{const el=ev.target;if(!el.matches('input[type=range]'))return;const k=el.id;state.settings[k]=Number(el.value);
+  if(k==='starMass'){const s=starBody();if(s){s.mass=state.settings.starMass;updateBodyMassVisual(s);calculateAccelerations();}}
+  if(k==='planetMass'){const b=selectedBody();if(b){b.mass=state.settings.planetMass*M_EARTH/M_SUN;updateBodyMassVisual(b);calculateAccelerations();}}
+  updateSliderReadouts();drawVRPanel();
+});
+$('#pauseBtn').addEventListener('click',()=>{state.running=!state.running;syncToolbar();});
+$('#resetBtn').addEventListener('click',()=>resetSystem());
+$('#seatBtn').addEventListener('click',()=>{state.seated=!state.seated;panelGroup.position.y=state.seated?1.52:1.85;syncToolbar();showToast(state.seated?'Configuração sentada selecionada.':'Configuração em pé selecionada.');drawVRPanel();});
+$('#captionBtn').addEventListener('click',()=>{state.captions=!state.captions;if(!state.captions)$('#caption').style.display='none';syncToolbar();});
+$('#narrationBtn').addEventListener('click',()=>{state.narration=!state.narration;if(state.narration&&!state.muted)speak(lessonSteps[state.lesson].body);syncToolbar();});
+$('#muteBtn').addEventListener('click',()=>{state.muted=!state.muted;if(state.muted&&'speechSynthesis'in window)window.speechSynthesis.cancel();syncToolbar();});
+$('#contrastBtn').addEventListener('click',()=>{state.highContrast=!state.highContrast;document.body.classList.toggle('highContrast',state.highContrast);syncToolbar();drawVRPanel();});
+
+// ---------- Sessão WebXR e fallback ----------
+const vrButton=VRButton.createButton(renderer,{requiredFeatures:['local-floor'],optionalFeatures:['bounded-floor']});
+vrButton.textContent='ENTRAR EM VR';$('#vrMount').appendChild(vrButton);
+if(!navigator.xr)showToast('WebXR não detectado: modo 3D de navegador disponível.');
+else navigator.xr.isSessionSupported('immersive-vr').then(ok=>{if(!ok)showToast('Este navegador não oferece immersive-vr; o modo 3D permanece disponível.');}).catch(()=>showToast('Não foi possível verificar WebXR; o modo 3D permanece disponível.'));
+renderer.xr.addEventListener('sessionstart',()=>{
+  state.xr=true;panelGroup.visible=true;document.body.classList.add('xr');camera.position.set(0,0,0);camera.rotation.set(0,0,0);cameraRig.position.set(0,0,5.8);cameraRig.rotation.set(0,0,0);
+  renderer.shadowMap.enabled=false;keyLight.castShadow=false;state.vignetteTime=0;drawVRPanel();showCaption('Gatilho: selecionar. Grip: agarrar planeta. Thumbstick esquerdo: teleporte. Thumbstick horizontal: giro de 30°.');
+});
+renderer.xr.addEventListener('sessionend',()=>{
+  state.xr=false;panelGroup.visible=false;document.body.classList.remove('xr');cameraRig.position.set(0,0,0);cameraRig.rotation.set(0,0,0);updateDesktopCamera();renderer.shadowMap.enabled=true;keyLight.castShadow=true;state.xrGrab=null;showToast('Você saiu do modo imersivo.');
+});
+
+// ---------- Loop único compatível com WebXR ----------
+function animate(time,frame){
+  const now=performance.now();const dt=Math.min(.05,Math.max(0,(now-(state.lastFrame||now))/1000));state.lastFrame=now;
+  if(state.running&&!state.collision){state.accumulator+=dt*state.settings.simRate;let steps=0;while(state.accumulator>1e-9&&steps<220){const h=Math.min(adaptivePhysicsStep(),state.accumulator);physicsStep(h);state.accumulator-=h;steps++;}if(steps>=220)state.accumulator=Math.min(state.accumulator,.08);}
+  if(state.xr){updateThumbsticks(now);updateXRGrab();}
+  else moveDesktop(dt);
+  updateVisuals();
+  sectorUpdateClock+=dt;if(sectorUpdateClock>.28){updateSectors();sectorUpdateClock=0;}
+  if(state.angleLine)state.angleLine.visible=state.measureMode==='angle';
+  if(state.vignetteTime>0){state.vignetteTime=Math.max(0,state.vignetteTime-dt);state.vignetteMat.uniforms.uOpacity.value=Math.min(.9,state.vignetteTime*2.6);}else state.vignetteMat.uniforms.uOpacity.value=0;
+  if(now-state.lastUI>320){updateDynamicDOM();if(state.xr)drawVRPanel();state.lastUI=now;}
+  if(state.toastUntil&&now>state.toastUntil){$('#toast').style.opacity='0';state.toastUntil=0;}
+  // FPS e métricas ficam disponíveis somente quando ?debug=1.
+  if(now-state.fps.last>1000){state.fps.value=state.fps.last?state.fps.frames*1000/(now-state.fps.last):0;state.fps.frames=0;state.fps.last=now;}state.fps.frames++;
+  if($('#debug').style.display==='block'){$('#debug').textContent=`FPS  ${state.fps.value.toFixed(0)}\nTRIÂNGULOS  ${renderer.info.render.triangles.toLocaleString('pt-BR')}\nDRAW CALLS  ${renderer.info.render.calls}\nCORPOS  ${state.bodies.length}\nPASSO MÁX.  ${DT} ano`;}
+  renderer.render(scene,camera);
+}
+
+function resize(){const w=window.innerWidth,h=window.innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+window.addEventListener('resize',resize);
+if(new URLSearchParams(location.search).get('debug')==='1')$('#debug').style.display='block';
+
+// Inicialização pedagógica: uma órbita circular de referência (Terra–Sol idealizados).
+initializeSystem();cameraRig.position.set(0,0,0);updateDesktopCamera();renderDOMPanel();drawVRPanel();syncToolbar();
+if(!('speechSynthesis'in window))$('#narrationBtn').disabled=true;
+renderer.setAnimationLoop(animate);
+</script>
+</body>
+</html>
